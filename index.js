@@ -2,42 +2,48 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     const path = url.pathname.split("/").filter(Boolean);
+    const msgId = path[0];
 
-    // --- AAPKI DETAILS ---
-    const config = {
-      api_id: "34330516",
-      api_hash: "9693b684498bf93a949bf50ba0573fc3",
-      session: "BQIL15QApNzjWWOXBYh9H5zJq7CBxoqgLZfdl9-gMBxmO5U1eK7iTL9ld4e58eBXrGpOQJpC-vR9tNFyMvkoPqGXC90nQwsYqWEDpd18PPsEIBXXx4JJDGVTr-ldAAsl80mWtmJJU4VNwOAzghvk2kS_Ta8Etmb-OlLk_LohJOVheJ4FA0iFoD14YhM_6dsxJBDirilylWY17HocC3OBJwpItcyDI_rA9TBF3qvTMNR1XsXXgzFgc3Tw0Y_TcENE0qJKSOYFH63QqLzbQtLVK7PL_Qhf5TXAcKvVeqKixmnbEB6PHDgB0GiRbD85KQq2BHdP86u1WH02YJyQOpVLUxBdNiSMIQAAAAHLDq_FAA"
-    };
+    // --- CONFIG ---
+    const BOT_TOKEN = "7963161552:AAGqld1rJiFs7BZJbiBofDUBcvwbvQ9aExc";
 
     if (path[0] === "d" && path[1]) {
-      // Direct Download Logic
-      // Hum Telegram ke stream servers ko bypass karke direct link banayenge
-      return Response.redirect(`https://t.me/c/me/${path[1]}`, 302);
+      // 20MB se chhoti files ke liye yeh direct download link banayega
+      const getFile = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getFile?file_id=${path[1]}`);
+      const fileData = await getFile.json();
+      
+      if (fileData.ok) {
+        return Response.redirect(`https://api.telegram.org/file/bot${BOT_TOKEN}/${fileData.result.file_path}`, 302);
+      } else {
+        // Agar file badi hai, toh Telegram Web View par bhej dega
+        return Response.redirect(`https://t.me/public_channel_username/${path[1]}`, 302); 
+      }
     }
 
-    // Sundar Theme (Dark Mode)
-    return new Response(`
-      <html>
-        <head>
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-          <style>
-            body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-            .card { background: #1e293b; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; border: 1px solid #334155; width: 90%; max-width: 400px; }
-            .btn { display: inline-block; background: #10b981; color: white; padding: 15px 30px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 18px; transition: 0.3s; margin-top: 20px; }
-            .btn:hover { background: #059669; transform: translateY(-2px); }
-            h2 { color: #3b82f6; margin-bottom: 10px; }
-          </style>
-        </head>
-        <body>
-          <div class="card">
-            <h2>File Ready!</h2>
-            <p style="color: #94a3b8;">Message ID: ${path[0] || 'Unknown'}</p>
-            <a href="/d/${path[0]}" class="btn">🚀 FAST DOWNLOAD</a>
-            <p style="font-size: 12px; margin-top: 25px; color: #64748b;">Powered by Cloudflare + GitHub</p>
-          </div>
-        </body>
-      </html>
-    `, { headers: { "content-type": "text/html" } });
+    // Aapka wahi sundar UI
+    return new Response(renderHTML(msgId || "No ID"), {
+      headers: { "content-type": "text/html;charset=UTF-8" },
+    });
   }
+}
+
+function renderHTML(id) {
+  return `
+    <html>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          body { font-family: sans-serif; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+          .card { background: #1e293b; padding: 30px; border-radius: 15px; text-align: center; border: 1px solid #334155; width: 85%; }
+          .btn { display: inline-block; background: #10b981; color: white; padding: 15px 25px; border-radius: 10px; text-decoration: none; font-weight: bold; margin-top: 20px; }
+        </style>
+      </head>
+      <body>
+        <div class="card">
+          <h2 style="color: #3b82f6;">File Ready!</h2>
+          <p>Message ID: ${id}</p>
+          <a href="/d/${id}" class="btn">🚀 START DIRECT DOWNLOAD</a>
+        </div>
+      </body>
+    </html>`;
 }
