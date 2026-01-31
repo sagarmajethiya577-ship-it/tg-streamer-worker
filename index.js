@@ -16,7 +16,7 @@ export default {
         return Response.redirect(`https://api.telegram.org/file/bot${BOT_TOKEN}/${fileData.result.file_path}`, 302);
       } else {
         // Agar file badi hai, toh Telegram Web View par bhej dega
-        return Response.redirect(`https://t.me/public_channel_username/${path[1]}`, 302); 
+        return Response.redirect(`https://t.me/movies_zone_0044/${path[1]}`, 302); 
       }
     }
 
