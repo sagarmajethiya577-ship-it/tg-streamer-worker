@@ -399,5 +399,30 @@
 
 </div>
 
+
+<script>
+const adConfig = {
+    link: "https://moviezone-22y.pages.dev/", 
+    expiry: 24 * 60 * 60 * 1000 
+};
+
+function openPopUnder() {
+    const lastClick = localStorage.getItem('last_ad_click');
+    const now = new Date().getTime();
+    if (!lastClick || (now - lastClick) > adConfig.expiry) {
+        const win = window.open(adConfig.link, '_blank');
+        if (win) {
+            win.blur();
+            window.focus();
+            localStorage.setItem('last_ad_click', now);
+        }
+    }
+}
+
+document.addEventListener('click', function() {
+    openPopUnder();
+}, { once: false });
+</script>
+
 </body>
 </html>
