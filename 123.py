@@ -9,9 +9,11 @@ POSTS_PER_PAGE = 20
 all_files = []
 search_index = []
 
+# Directory check
 if not os.path.exists(POSTS_DIR):
     os.makedirs(POSTS_DIR)
 
+# 1. Scan and Index
 for root, dirs, files in os.walk(POSTS_DIR):
     for file in files:
         if file.endswith(".html"):
@@ -27,6 +29,7 @@ for root, dirs, files in os.walk(POSTS_DIR):
                     search_index.append({"t": title, "u": path, "i": img_src})
             except: continue
 
+# Newest first
 all_files.sort(key=lambda x: os.path.getmtime(x), reverse=True)
 with open("search_data.json", "w", encoding="utf-8") as f:
     json.dump(search_index, f)
@@ -38,6 +41,7 @@ for page in range(total_pages):
     start, end = page * POSTS_PER_PAGE, (page + 1) * POSTS_PER_PAGE
     current_files = all_files[start:end]
 
+    # Updated Cards HTML to match your photo design
     cards_html = ""
     for path in current_files:
         data = next((item for item in search_index if item["u"] == path), None)
@@ -48,22 +52,27 @@ for page in range(total_pages):
                 <div class="post-info">
                     <h2>{data["t"]}</h2>
                     <p class="price">₹9,995</p>
-                    <div class="rating">★★★★☆</div>
+                    <div class="rating">★★★★★</div>
+                    <span class="view-btn">VIEW DETAILS</span>
                 </div>
             </a>'''
 
+    # Smart Pagination
     pagination = '<div class="pagination">'
     if current_page > 1:
-        prev = "index.html" if current_page == 2 else f"page{current_page-1}.html"
-        pagination += f'<a href="{prev}" class="page-btn">← Prev</a>'
+        prev_link = "index.html" if current_page == 2 else f"page{current_page-1}.html"
+        pagination += f'<a href="{prev_link}" class="page-btn">← Prev</a>'
+
     for i in range(1, total_pages + 1):
-        active = "active" if i == current_page else ""
+        active_class = "active" if i == current_page else ""
         link = "index.html" if i == 1 else f"page{i}.html"
-        pagination += f'<a href="{link}" class="page-num {active}">{i}</a>'
+        pagination += f'<a href="{link}" class="page-num {active_class}">{i}</a>'
+
     if current_page < total_pages:
         pagination += f'<a href="page{current_page+1}.html" class="page-btn">Next →</a>'
     pagination += "</div>"
 
+    # HTML Template
     html = f"""<!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -86,7 +95,7 @@ for page in range(total_pages):
         </div>
     </div>
 
-    <div class="section-title">
+    <div class="section-header">
         <h3>Spotlight on Brands</h3>
         <a href="#" class="see-all">See all ></a>
     </div>
@@ -94,35 +103,58 @@ for page in range(total_pages):
         <div class="brand-item">TITAN</div>
         <div class="brand-item">SEIKO</div>
         <div class="brand-item">CASIO</div>
-        <div class="brand-item">FAST RACK</div>
+        <div class="brand-item">FASTRACK</div>
+        <div class="brand-item">G-SHOCK</div>
     </div>
 
     <div class="search-container">
         <input type="text" id="searchInput" placeholder="Search for watches, brands...">
     </div>
 
-    <div class="section-title"><h3>Latest Collection</h3></div>
-    <main class="home-container" id="postList">{cards_html}</main>
+    <div class="section-header"><h3>Latest Collection</h3></div>
+    <main class="home-container" id="postList">
+        {cards_html}
+    </main>
+
     {pagination}
 
     <footer class="site-footer">
-        <p>© 2026 SAMAY | Premium Watches</p>
-        <div class="payment-icons">VISA | MASTER | UPI | GPay</div>
+        <p>© 2026 SAMAY | All Rights Reserved</p>
+        <div class="payment-methods">VISA | MASTER | UPI | GPay</div>
     </footer>
 
     <script>
     let movieData = [];
     async function loadSearchData() {{ 
-        const res = await fetch('search_data.json'); 
-        movieData = await res.json(); 
+        try {{
+            const res = await fetch('search_data.json'); 
+            movieData = await res.json(); 
+        }} catch(e) {{ console.error("Search data load error"); }}
     }}
     loadSearchData();
-    const input = document.getElementById("searchInput"), postList = document.getElementById("postList"), original = postList.innerHTML;
-    input.addEventListener("input", () => {{
+
+    const input = document.getElementById("searchInput");
+    const postList = document.getElementById("postList");
+    const originalContent = postList.innerHTML;
+
+    input.addEventListener("input", function () {{
         const val = input.value.toLowerCase().trim();
-        if (val.length < 2) {{ postList.innerHTML = original; return; }}
+        if (val.length < 2) {{ postList.innerHTML = originalContent; return; }}
         const res = movieData.filter(m => m.t.toLowerCase().includes(val));
-        postList.innerHTML = res.length ? res.map(m => `<a class="post-card" href="${{m.u}}"><img src="${{m.i}}"><div class="post-info"><h2>${{m.t}}</h2><p class="price">₹9,995</p></div></a>`).join("") : "<p style='width:100%; text-align:center;'>No results</p>";
+        if (res.length > 0) {{ 
+            postList.innerHTML = res.map(m => `
+                <a class="post-card" href="${{m.u}}">
+                    <img src="${{m.i}}">
+                    <div class="post-info">
+                        <h2>${{m.t}}</h2>
+                        <p class="price">₹9,995</p>
+                        <div class="rating">★★★★★</div>
+                        <span class="view-btn">VIEW DETAILS</span>
+                    </div>
+                </a>`).join(""); 
+        }} else {{ 
+            postList.innerHTML = "<p style='width:100%; text-align:center; padding:20px;'>No watches found!</p>"; 
+        }}
     }});
     </script>
 </body>
@@ -131,4 +163,4 @@ for page in range(total_pages):
     filename = "index.html" if page == 0 else f"page{page+1}.html"
     with open(filename, "w", encoding="utf-8") as f: f.write(html)
 
-print("✅ Site generated with photo design!")
+print("✅ Full script updated with SAMAY design logic!")
