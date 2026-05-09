@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAMAY - The Watch Collective</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+    <header class="bg-white p-4 flex justify-between items-center shadow-sm sticky top-0 z-50">
+        <h1 class="text-2xl font-bold tracking-tighter text-blue-900">समय</h1>
+        <div class="flex gap-4"><span>🔍</span><span>🛒</span></div>
+    </header>
+    <section class="relative h-64 bg-slate-800 overflow-hidden">
+        <div class="absolute inset-0 flex flex-col justify-center p-6 text-white">
+            <h2 class="text-3xl font-bold mb-2">समय का सही चयन</h2>
+            <button class="bg-yellow-500 text-black font-bold py-2 px-6 rounded w-max">Explore</button>
+        </div>
+    </section>
+    <section class="p-4"><h3 class="font-bold mb-4">Watch of the Week</h3><div class="grid grid-cols-2 gap-4" id="watch-container"></div></section>
+    <script>
+        fetch('https://raw.githubusercontent.com/user/repo/main/watches.json').then(res => res.json()).then(data => {
+            const container = document.getElementById('watch-container');
+            data.forEach(w => {
+                container.innerHTML += '<div class="bg-white p-3 rounded-lg shadow-sm border"><img src="'+w.image+'" class="w-full rounded mb-2"><h4 class="font-bold text-sm">'+w.name+'</h4><p class="text-blue-900 font-bold">₹'+w.price+'</p></div>';
+            });
+        }).catch(() => {
+            document.getElementById('watch-container').innerHTML = '<p>Loading watches...</p>';
+        });
+    </script>
+</body>
+</html>

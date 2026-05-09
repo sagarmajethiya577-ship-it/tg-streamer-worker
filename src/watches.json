@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "name": "Titan Neo Analog",
+    "brand": "Titan",
+    "price": "9,995",
+    "image": "https://via.placeholder.com/300x400?text=Titan+Neo",
+    "rating": 5
+  },
+  {
+    "id": 2,
+    "name": "Casio G-Shock Rugged",
+    "brand": "Casio",
+    "price": "15,500",
+    "image": "https://via.placeholder.com/300x400?text=G-Shock",
+    "rating": 4
+  }
+]
