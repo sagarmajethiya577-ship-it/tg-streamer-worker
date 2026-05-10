@@ -1,22 +1,23 @@
 import os
 from bs4 import BeautifulSoup
-import math
-import json
 
 POSTS_DIR = "Posts"
-POSTS_PER_PAGE = 20
 
-# Create Directory if not exists
-if not os.path.exists(POSTS_DIR):
-    os.makedirs(POSTS_DIR)
+# 1. PEHLE PURANI HTML FILES DELETE KARNA (Clean Start)
+if os.path.exists(POSTS_DIR):
+    for file in os.listdir(POSTS_DIR):
+        if file.endswith(".html"):
+            os.remove(os.path.join(POSTS_DIR, file))
+    print("🗑️ Posts folder saaf ho gaya hai. Ab apni nayi HTML files yahan copy karein.")
 
+# Rokne ke liye taaki aap files copy kar sakein, ya fir agar files hain toh aage badhega
 all_posts_data = []
 
-# 1. SCAN POSTS AND EXTRACT DATA
-for root, dirs, files in os.walk(POSTS_DIR):
-    for file in files:
+# 2. SCAN POSTS (Nayi files jo aapne copy ki hongi)
+if os.path.exists(POSTS_DIR):
+    for file in os.listdir(POSTS_DIR):
         if file.endswith(".html"):
-            path = os.path.join(root, file).replace("\\", "/")
+            path = os.path.join(POSTS_DIR, file).replace("\\", "/")
             try:
                 with open(path, "r", encoding="utf-8", errors="ignore") as f:
                     soup = BeautifulSoup(f, "html.parser")
@@ -25,38 +26,37 @@ for root, dirs, files in os.walk(POSTS_DIR):
                     h1 = soup.find("h1")
                     title = h1.get_text(strip=True) if h1 else file.replace(".html", "")
                     
-                    # Store data to recreate the post page later
+                    # Sirf body ka content nikalna
+                    body_content = soup.body.decode_contents() if soup.body else "No Content"
+                    
                     all_posts_data.append({
                         "path": path,
                         "title": title,
                         "image": img_src,
-                        "content": str(soup.body.decode_contents()) if soup.body else "No Content"
+                        "content": body_content
                     })
             except: continue
 
-# 2. DEFINE SHARED HEADER/FOOTER TEMPLATE
-def get_template(title, body_content):
+# 3. DEFINE LAYOUT (OSTIN Branding)
+def get_layout(title, body_content, is_index=False):
+    css_path = "style.css" if is_index else "../style.css"
     return f"""<!DOCTYPE html>
 <html lang="hi" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title} - OSTIN</title>
-    <link rel="stylesheet" href="../style.css"> </head>
+    <link rel="stylesheet" href="{css_path}">
+</head>
 <body>
     <header class="site-header">
         <a href="/" class="logo">OSTIN</a>
         <button id="themeToggle" class="theme-switch">🌙 Dark</button>
     </header>
-
-    <div class="post-container">
-        {body_content}
-    </div>
-
+    {body_content}
     <footer class="site-footer">
         <p>© 2026 OSTIN | Premium Store</p>
     </footer>
-
     <script>
     const toggleBtn = document.getElementById('themeToggle');
     const htmlTag = document.documentElement;
@@ -74,22 +74,35 @@ def get_template(title, body_content):
 </body>
 </html>"""
 
-# 3. RE-WRITE ALL POST FILES WITH NEW DESIGN
+# 4. RE-WRITE POST FILES (No extra buttons added here)
 for post in all_posts_data:
-    formatted_content = f"""
-    <img src="{post['image']}" class="post-header-img">
-    <div class="post-details">
-        <h1>{post['title']}</h1>
-        <p class="post-price">₹9,995</p>
-        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 15px 0;">
-        {post['content']}
-        <a href="#" class="buy-now-btn">ORDER ON WHATSAPP</a>
-    </div>
-    """
+    formatted_post = f"""<div class="post-container">{post['content']}</div>"""
     with open(post['path'], "w", encoding="utf-8") as f:
-        f.write(get_template(post['title'], formatted_content))
+        f.write(get_layout(post['title'], formatted_post))
 
-# 4. GENERATE INDEX PAGE (Home)
-# ... [Same index generation logic but update logo to OSTIN and href to /]
-# (Note: Ensure the index.html also uses the 'OSTIN' logo in its template)
-print("✅ All Posts updated with OSTIN branding and Layout!")
+# 5. GENERATE INDEX.HTML (Home Page)
+cards_html = ""
+for post in all_posts_data:
+    cards_html += f'''
+    <a class="post-card" href="{post['path']}">
+        <img src="{post['image']}" alt="{post['title']}">
+        <div class="post-info">
+            <h2>{post['title']}</h2>
+            <p class="price">₹9,995</p>
+            <span class="view-btn">VIEW DETAILS</span>
+        </div>
+    </a>'''
+
+home_content = f"""
+    <div class="hero-slider">
+        <div class="slide"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000"></div>
+    </div>
+    <div class="section-header"><h3>Latest Collection</h3></div>
+    <main class="home-container">
+        {cards_html if cards_html else "<p style='grid-column: 1/-1; text-align:center;'>Abhi koi post nahi hai. Files copy karke script dubara chalayein.</p>"}
+    </main>"""
+
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(get_layout("Home", home_content, is_index=True))
+
+print("✅ Index file aur Posts update ho gaye hain!")
