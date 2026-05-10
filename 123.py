@@ -48,18 +48,21 @@ for page in range(math.ceil(len(all_files) / POSTS_PER_PAGE) if all_files else 1
                 </div>
             </a>'''
 
+# ... (Baaki scanning logic same rahega jo pehle tha) ...
+
+    # HTML Template Update
     html = f"""<!DOCTYPE html>
-<html lang="hi">
+<html lang="hi" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>समय - Premium Watches</title>
+    <title>समय - Premium Store</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header class="site-header">
         <a href="/" class="logo">समय</a>
-        <div class="nav-icons"><span>🔍</span> <span>👤</span> <span>🛒</span></div>
+        <button id="themeToggle" class="theme-switch">🌙 Dark</button>
     </header>
 
     <div class="hero-slider">
@@ -68,14 +71,43 @@ for page in range(math.ceil(len(all_files) / POSTS_PER_PAGE) if all_files else 1
     </div>
 
     <div class="section-header"><h3>Latest Collection</h3></div>
-    <main class="home-container">{cards_html if cards_html else "<p style='grid-column: 1/-1; text-align:center; padding:20px;'>No items found in Posts folder.</p>"}</main>
-    
+    <main class="home-container" id="postList">
+        {cards_html}
+    </main>
+
     <footer class="site-footer">
-        <p>© 2026 SAMAY | Premium Watches</p>
+        <p>© 2026 SAMAY | All Rights Reserved</p>
     </footer>
+
+    <script>
+    // Theme Toggle Logic
+    const toggleBtn = document.getElementById('themeToggle');
+    const htmlTag = document.documentElement;
+
+    toggleBtn.addEventListener('click', () => {{
+        if (htmlTag.getAttribute('data-theme') === 'light') {{
+            htmlTag.setAttribute('data-theme', 'dark');
+            toggleBtn.innerHTML = "☀️ Light";
+            localStorage.setItem('theme', 'dark');
+        }} else {{
+            htmlTag.setAttribute('data-theme', 'light');
+            toggleBtn.innerHTML = "🌙 Dark";
+            localStorage.setItem('theme', 'light');
+        }}
+    }});
+
+    // Load Saved Theme
+    if (localStorage.getItem('theme') === 'dark') {{
+        htmlTag.setAttribute('data-theme', 'dark');
+        toggleBtn.innerHTML = "☀️ Light";
+    }}
+    </script>
 </body>
 </html>"""
     
+    # ... (File writing logic same rahega) ...
+
+
     filename = "index.html" if page == 0 else f"page{page+1}.html"
     with open(filename, "w", encoding="utf-8") as f: f.write(html)
 

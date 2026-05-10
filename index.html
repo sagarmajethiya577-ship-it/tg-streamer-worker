@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="hi" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>समय - Premium Watches</title>
+    <title>समय - Premium Store</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header class="site-header">
         <a href="/" class="logo">समय</a>
-        <div class="nav-icons"><span>🔍</span> <span>👤</span> <span>🛒</span></div>
+        <button id="themeToggle" class="theme-switch">🌙 Dark</button>
     </header>
 
     <div class="hero-slider">
@@ -18,18 +18,44 @@
     </div>
 
     <div class="section-header"><h3>Latest Collection</h3></div>
-    <main class="home-container">
+    <main class="home-container" id="postList">
+        
             <a class="post-card" href="Posts/watch-1.html">
-                <img src="https://i.ibb.co/DH0gpcc6/55f11b8be8cc.jpgg" alt="Premium Two Tone Watch No: 247">
+                <img src="https://i.ibb.co/DH0gpcc6/55f11b8be8cc.jpg" alt="Premium Two Tone Watch No: 247">
                 <div class="post-info">
                     <h2>Premium Two Tone Watch No: 247</h2>
                     <p class="price">₹9,995</p>
                     <span class="view-btn">VIEW DETAILS</span>
                 </div>
-            </a></main>
-    
+            </a>
+    </main>
+
     <footer class="site-footer">
-        <p>© 2026 SAMAY | Premium Watches</p>
+        <p>© 2026 SAMAY | All Rights Reserved</p>
     </footer>
+
+    <script>
+    // Theme Toggle Logic
+    const toggleBtn = document.getElementById('themeToggle');
+    const htmlTag = document.documentElement;
+
+    toggleBtn.addEventListener('click', () => {
+        if (htmlTag.getAttribute('data-theme') === 'light') {
+            htmlTag.setAttribute('data-theme', 'dark');
+            toggleBtn.innerHTML = "☀️ Light";
+            localStorage.setItem('theme', 'dark');
+        } else {
+            htmlTag.setAttribute('data-theme', 'light');
+            toggleBtn.innerHTML = "🌙 Dark";
+            localStorage.setItem('theme', 'light');
+        }
+    });
+
+    // Load Saved Theme
+    if (localStorage.getItem('theme') === 'dark') {
+        htmlTag.setAttribute('data-theme', 'dark');
+        toggleBtn.innerHTML = "☀️ Light";
+    }
+    </script>
 </body>
 </html>
