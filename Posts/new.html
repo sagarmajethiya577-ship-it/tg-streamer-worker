@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="hi" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Two Tone Watch No: 247 - OSTIN</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a href="/" class="logo">OSTIN</a>
+        <button id="themeToggle" class="theme-switch">🌙 Dark</button>
+    </header>
+    <div class="post-container"><div class="hero-slider">
+<div class="slide"><img src="https://res.cloudinary.com/dj1csslg1/image/upload/v1778345672/movies_zone/jkdrpsses6bqqcbgfqzi.jpg"/></div>
+<div class="slide"><img src="https://res.cloudinary.com/dj1csslg1/image/upload/v1778326190/movies_zone/tfgkccvbogq1mbn4mmfj.jpg"/></div>
+<div class="slide"><img src="https://res.cloudinary.com/dj1csslg1/image/upload/v1778345481/movies_zone/dxnqr2wbga2ft4etu3x6.jpg"/></div>
+<div class="slide"><img src=""/>https://res.cloudinary.com/dj1csslg1/image/upload/v1778291431/movies_zone/aurrs962589ibdctzjfl.jpg</div>
+</div>
+<div class="post-details">
+<h1>Premium Two Tone Watch No: 247</h1>
+<p class="post-price">₹9,995</p>
+<hr style="border: 0; border-top: 1px solid var(--border-color); margin: 15px 0;"/>
+<h3>Product Description</h3>
+<p>Ye watch premium leather strap ke saath aati hai. Isme scratch-resistant glass aur water resistance di gayi hai.</p>
+<ul style="margin: 15px 0; padding-left: 20px; line-height: 1.8;">
+<li><b>Color:</b> Two-Tone (Gold &amp; Silver)</li>
+<li><b>Strap:</b> Genuine Leather</li>
+<li><b>Movement:</b> Japanese Quartz</li>
+<li><b>Warranty:</b> 1 Year</li>
+</ul>
+<a class="buy-now-btn" href="https://amazon.in/link" style="background: #FF9900; margin-bottom: 10px;">BUY ON AMAZON</a>
+<a class="buy-now-btn" href="https://wa.me/number" style="background: #25D366;">ORDER ON WHATSAPP</a>
+</div>
+</div>
+    <footer class="site-footer">
+        <p>© 2026 OSTIN | Premium Store</p>
+    </footer>
+    <script>
+    const toggleBtn = document.getElementById('themeToggle');
+    const htmlTag = document.documentElement;
+    toggleBtn.addEventListener('click', () => {
+        const theme = htmlTag.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        htmlTag.setAttribute('data-theme', theme);
+        toggleBtn.innerHTML = theme === 'dark' ? "☀️ Light" : "🌙 Dark";
+        localStorage.setItem('theme', theme);
+    });
+    if (localStorage.getItem('theme') === 'dark') {
+        htmlTag.setAttribute('data-theme', 'dark');
+        toggleBtn.innerHTML = "☀️ Light";
+    }
+    </script>
+</body>
+</html>

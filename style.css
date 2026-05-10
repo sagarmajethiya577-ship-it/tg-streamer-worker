@@ -52,3 +52,10 @@ body { font-family: 'Segoe UI', sans-serif; background: var(--bg-color); color: 
 .view-btn { display: block; margin-top: 10px; padding: 8px; border: 1px solid var(--primary-color); border-radius: 4px; font-size: 11px; font-weight: bold; }
 .site-footer { padding: 30px; text-align: center; border-top: 1px solid var(--border-color); font-size: 12px; }
 
+/* Post Details Styling */
+.post-details h3 { margin-top: 20px; font-size: 18px; color: var(--primary-color); }
+.post-details ul li { font-size: 14px; color: var(--text-color); opacity: 0.9; }
+
+/* Slider height post ke liye fix karna */
+.post-container .hero-slider { border-radius: 12px; margin-bottom: 20px; height: 350px; }
+
