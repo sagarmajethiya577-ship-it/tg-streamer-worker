@@ -3,42 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - OSTIN</title>
+    <title>समय - Premium Store</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header class="site-header">
-        <a href="/" class="logo">OSTIN</a>
+        <a href="/" class="logo">समय</a>
         <button id="themeToggle" class="theme-switch">🌙 Dark</button>
     </header>
-    
-    <div class="hero-slider"><div class="slide"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000"></div></div>
+
+    <div class="hero-slider">
+        <div class="slide"><img src="https://images.unsplash.com/photo-1547996160-81dfa63595aa?q=80&w=1000"></div>
+        <div class="slide"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000"></div>
+    </div>
+
     <div class="section-header"><h3>Latest Collection</h3></div>
-    <main class="home-container">
-    <a class="post-card" href="Posts/watch-1.html">
-        <img src="https://i.ibb.co/DH0gpcc6/55f11b8be8cc.jpg">
-        <div class="post-info"><h2>Premium Two Tone Watch No: 247</h2><p class="price">₹9,995</p><span class="view-btn">VIEW DETAILS</span></div>
-    </a>
-    <a class="post-card" href="Posts/demo.html">
-        <img src="https://i.ibb.co/DH0gpcc6/55f11b8be8cc.jpg">
-        <div class="post-info"><h2>Premium Two Tone Watch No: 247</h2><p class="price">₹9,995</p><span class="view-btn">VIEW DETAILS</span></div>
-    </a></main>
+    <main class="home-container" id="postList">
+        
+            <a class="post-card" href="Posts/watch-1.html">
+                <img src="https://i.ibb.co/DH0gpcc6/55f11b8be8cc.jpg" alt="Premium Two Tone Watch No: 247">
+                <div class="post-info">
+                    <h2>Premium Two Tone Watch No: 247</h2>
+                    <p class="price">₹9,995</p>
+                    <span class="view-btn">VIEW DETAILS</span>
+                </div>
+            </a>
+            <a class="post-card" href="Posts/demo.html">
+                <img src="https://i.ibb.co/DH0gpcc6/55f11b8be8cc.jpg" alt="Premium Two Tone Watch No: 247">
+                <div class="post-info">
+                    <h2>Premium Two Tone Watch No: 247</h2>
+                    <p class="price">₹9,995</p>
+                    <span class="view-btn">VIEW DETAILS</span>
+                </div>
+            </a>
+    </main>
+
     <footer class="site-footer">
-        <p>© 2026 OSTIN | Premium Store</p>
+        <p>© 2026 SAMAY | All Rights Reserved</p>
     </footer>
+
     <script>
-        const toggleBtn = document.getElementById('themeToggle');
-        const htmlTag = document.documentElement;
-        toggleBtn.addEventListener('click', () => {
-            const theme = htmlTag.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-            htmlTag.setAttribute('data-theme', theme);
-            toggleBtn.innerHTML = theme === 'dark' ? "☀️ Light" : "🌙 Dark";
-            localStorage.setItem('theme', theme);
-        });
-        if (localStorage.getItem('theme') === 'dark') {
+    // Theme Toggle Logic
+    const toggleBtn = document.getElementById('themeToggle');
+    const htmlTag = document.documentElement;
+
+    toggleBtn.addEventListener('click', () => {
+        if (htmlTag.getAttribute('data-theme') === 'light') {
             htmlTag.setAttribute('data-theme', 'dark');
             toggleBtn.innerHTML = "☀️ Light";
+            localStorage.setItem('theme', 'dark');
+        } else {
+            htmlTag.setAttribute('data-theme', 'light');
+            toggleBtn.innerHTML = "🌙 Dark";
+            localStorage.setItem('theme', 'light');
         }
+    });
+
+    // Load Saved Theme
+    if (localStorage.getItem('theme') === 'dark') {
+        htmlTag.setAttribute('data-theme', 'dark');
+        toggleBtn.innerHTML = "☀️ Light";
+    }
     </script>
 </body>
 </html>
