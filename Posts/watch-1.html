@@ -1,14 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="hi" data-theme="light">
 <head>
-    <title>Watch Details</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
+    <title>Premium Two Tone Watch No: 247 - OSTIN</title>
+    <link rel="stylesheet" href="../style.css"> </head>
 <body>
-    <img src="https://i.ibb.co/DH0gpcc6/55f11b8be8cc.jpg" style="width:100%; max-width:400px;">
-    <h1>Premium Two Tone Watch No: 247</h1>
-    <p>Price: ₹9,995</p>
-    <p>Description: Ye watch premium leather strap ke saath aati hai.</p>
-    <button>Buy Now</button>
+    <header class="site-header">
+        <a href="/" class="logo">OSTIN</a>
+        <button id="themeToggle" class="theme-switch">🌙 Dark</button>
+    </header>
+
+    <div class="post-container">
+        
+    <img src="https://i.ibb.co/DH0gpcc6/55f11b8be8cc.jpg" class="post-header-img">
+    <div class="post-details">
+        <h1>Premium Two Tone Watch No: 247</h1>
+        <p class="post-price">₹9,995</p>
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 15px 0;">
+        
+<img src="https://i.ibb.co/DH0gpcc6/55f11b8be8cc.jpg" style="width:100%; max-width:400px;"/>
+<h1>Premium Two Tone Watch No: 247</h1>
+<p>Price: ₹9,995</p>
+<p>Description: Ye watch premium leather strap ke saath aati hai.</p>
+<button>Buy Now</button>
+
+        <a href="#" class="buy-now-btn">ORDER ON WHATSAPP</a>
+    </div>
+    
+    </div>
+
+    <footer class="site-footer">
+        <p>© 2026 OSTIN | Premium Store</p>
+    </footer>
+
+    <script>
+    const toggleBtn = document.getElementById('themeToggle');
+    const htmlTag = document.documentElement;
+    toggleBtn.addEventListener('click', () => {
+        const theme = htmlTag.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        htmlTag.setAttribute('data-theme', theme);
+        toggleBtn.innerHTML = theme === 'dark' ? "☀️ Light" : "🌙 Dark";
+        localStorage.setItem('theme', theme);
+    });
+    if (localStorage.getItem('theme') === 'dark') {
+        htmlTag.setAttribute('data-theme', 'dark');
+        toggleBtn.innerHTML = "☀️ Light";
+    }
+    </script>
 </body>
 </html>
