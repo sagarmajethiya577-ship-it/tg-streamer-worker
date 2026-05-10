@@ -27,6 +27,16 @@
 <img class="post-header-img" src="https://i.ibb.co/DH0gpcc6/55f11b8be8cc.jpg"/>
 <div class="post-details">
 <h1>Premium Two Tone Watch No: 247</h1>
+<p class="post-price">₹9,995</p>
+<hr style="border: 0; border-top: 1px solid var(--border-color); margin: 15px 0;"/>
+<header class="site-header">
+<a class="logo" href="/">OSTIN</a>
+<button class="theme-switch" id="themeToggle">🌙 Dark</button>
+</header>
+<div class="post-container">
+<img class="post-header-img" src="https://i.ibb.co/DH0gpcc6/55f11b8be8cc.jpg">
+<div class="post-details">
+<h1>Premium Two Tone Watch No: 247</h1>
 <header class="site-header">
 <a class="logo" href="/">OSTIN</a>
 <button class="theme-switch" id="themeToggle">🌙 Dark</button>
@@ -53,7 +63,7 @@
         }
     </script>
 </div>
-</div>
+</img></div>
 <footer class="site-footer">
 <p>© 2026 OSTIN | Premium Store</p>
 </footer>
@@ -70,6 +80,26 @@
             htmlTag.setAttribute('data-theme', 'dark');
             toggleBtn.innerHTML = "☀️ Light";
         }
+    </script>
+<a class="buy-now-btn" href="#">ORDER ON WHATSAPP</a>
+</div>
+</div>
+<footer class="site-footer">
+<p>© 2026 OSTIN | Premium Store</p>
+</footer>
+<script>
+    const toggleBtn = document.getElementById('themeToggle');
+    const htmlTag = document.documentElement;
+    toggleBtn.addEventListener('click', () => {
+        const theme = htmlTag.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        htmlTag.setAttribute('data-theme', theme);
+        toggleBtn.innerHTML = theme === 'dark' ? "☀️ Light" : "🌙 Dark";
+        localStorage.setItem('theme', theme);
+    });
+    if (localStorage.getItem('theme') === 'dark') {
+        htmlTag.setAttribute('data-theme', 'dark');
+        toggleBtn.innerHTML = "☀️ Light";
+    }
     </script>
 
         <a href="#" class="buy-now-btn">ORDER ON WHATSAPP</a>
