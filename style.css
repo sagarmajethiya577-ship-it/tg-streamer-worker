@@ -81,3 +81,36 @@ body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background
     color: #002347; border-radius: 4px; font-size: 14px; font-weight: 600;
 }
 .page-num.active { background: #002347; color: #fff; }
+
+
+/* Hero Slider Container */
+.hero-slider {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; /* Firefox */
+    background: #f0f0f0;
+}
+.hero-slider::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
+.slide {
+    min-width: 100%;
+    scroll-snap-align: start;
+    position: relative;
+    height: 250px; /* Aap ise adjust kar sakte hain */
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Banner se text hatane ke baad explore button ko center karne ke liye */
+.btn-explore-container {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
