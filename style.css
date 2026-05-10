@@ -43,6 +43,12 @@ body { font-family: 'Segoe UI', sans-serif; background: var(--bg-color); color: 
 /* Post Details & Shop Buttons */
 .post-container { max-width: 600px; margin: 0 auto; padding: 20px; }
 .post-header-img { width: 100%; border-radius: 15px; margin-bottom: 15px; }
-.shop-buttons { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-.btn-amazon { background: #FF9900; color: #000; padding: 15px; text-align: center; border-radius: 8px; font-weight: bold; text-decoration: none; }
-.btn-flipkart { background: #2874f0; color: #fff; padding: 15px; text-align: center; border-radius: 8px; font-weight: bold; text-decoration: none; }
+.shop-buttons { margin-top: 25px; display: flex; flex-direction: column; gap: 12px; }
+.btn-amazon, .btn-flipkart, .btn-whatsapp {
+    display: block; width: 100%; padding: 14px; text-align: center; 
+    text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;
+}
+.btn-amazon { background: #FF9900; color: #000; }
+.btn-flipkart { background: #2874f0; color: #fff; }
+.btn-whatsapp { background: #25D366; color: #fff; }
+
