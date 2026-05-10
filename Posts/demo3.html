@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="hi" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Men Quartz Green Dial Analog Watch - OSTIN</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a href="/" class="logo">OSTIN</a>
+        <button id="themeToggle" class="theme-switch">🌙 Dark</button>
+    </header>
+    <div class="post-container"><div class="hero-slider">
+<div class="slide"><img src="https://i.ibb.co/WvtZpK45/1778433434933.png"/></div>
+<div class="slide"><img src="https://i.ibb.co/chLJTm3n/1778433425543.png"/></div>
+<div class="slide"><img src="https://i.ibb.co/Q3dSg07J/1778433566312.png"/></div>
+</div>
+<div class="post-details">
+<p class="brand-name">OSTIN PREMIUM</p>
+<h1>Fashion Men Quartz Green Dial Analog Watch</h1>
+<p class="post-price">₹3,295 <span class="tax-info">(Inc. of all taxes)</span></p>
+<div class="action-buttons">
+<a class="btn-buy" href="#">BUY NOW</a>
+<a class="btn-cart" href="#">ADD TO CART</a>
+</div>
+<hr class="separator"/>
+<div class="specs-section">
+<h3>PRODUCT SPECIFICATIONS</h3>
+<div class="specs-grid">
+<div class="spec-item">
+<span class="spec-icon">◯</span>
+<p class="spec-label">Case Shape</p>
+<p class="spec-value">ROUND</p>
+</div>
+<div class="spec-item">
+<span class="spec-icon">↔</span>
+<p class="spec-label">Dial Diameter</p>
+<p class="spec-value">41 MM</p>
+</div>
+<div class="spec-item">
+<span class="spec-icon">⚙</span>
+<p class="spec-label">Movement</p>
+<p class="spec-value">QUARTZ</p>
+</div>
+<div class="spec-item">
+<span class="spec-icon">♂</span>
+<p class="spec-label">Gender</p>
+<p class="spec-value">MEN</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+    <footer class="site-footer">
+        <p>© 2026 OSTIN | Premium Store</p>
+    </footer>
+    <script>
+    const toggleBtn = document.getElementById('themeToggle');
+    const htmlTag = document.documentElement;
+    toggleBtn.addEventListener('click', () => {
+        const theme = htmlTag.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        htmlTag.setAttribute('data-theme', theme);
+        toggleBtn.innerHTML = theme === 'dark' ? "☀️ Light" : "🌙 Dark";
+        localStorage.setItem('theme', theme);
+    });
+    if (localStorage.getItem('theme') === 'dark') {
+        htmlTag.setAttribute('data-theme', 'dark');
+        toggleBtn.innerHTML = "☀️ Light";
+    }
+    </script>
+</body>
+</html>
