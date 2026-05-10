@@ -56,12 +56,12 @@ for page in range(math.ceil(len(all_files) / POSTS_PER_PAGE) if all_files else 1
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>समय - Premium Store</title>
+    <title>OSTIN - Premium Store</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header class="site-header">
-        <a href="/" class="logo">समय</a>
+        <a href="/" class="logo">OSTIN</a>
         <button id="themeToggle" class="theme-switch">🌙 Dark</button>
     </header>
 
@@ -76,7 +76,7 @@ for page in range(math.ceil(len(all_files) / POSTS_PER_PAGE) if all_files else 1
     </main>
 
     <footer class="site-footer">
-        <p>© 2026 SAMAY | All Rights Reserved</p>
+        <p>© 2026 OSTIN | All Rights Reserved</p>
     </footer>
 
     <script>
