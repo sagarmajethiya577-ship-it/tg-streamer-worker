@@ -12,7 +12,6 @@ search_index = []
 if not os.path.exists(POSTS_DIR):
     os.makedirs(POSTS_DIR)
 
-# 1. Scan and Index
 for root, dirs, files in os.walk(POSTS_DIR):
     for file in files:
         if file.endswith(".html"):
@@ -29,12 +28,8 @@ for root, dirs, files in os.walk(POSTS_DIR):
             except: continue
 
 all_files.sort(key=lambda x: os.path.getmtime(x), reverse=True)
-with open("search_data.json", "w", encoding="utf-8") as f:
-    json.dump(search_index, f)
 
-total_pages = math.ceil(len(all_files) / POSTS_PER_PAGE) if all_files else 1
-
-for page in range(total_pages):
+for page in range(math.ceil(len(all_files) / POSTS_PER_PAGE) if all_files else 1):
     current_page = page + 1
     start, end = page * POSTS_PER_PAGE, (page + 1) * POSTS_PER_PAGE
     current_files = all_files[start:end]
@@ -49,21 +44,16 @@ for page in range(total_pages):
                 <div class="post-info">
                     <h2>{data["t"]}</h2>
                     <p class="price">₹9,995</p>
-                    <div class="rating">★★★★★</div>
                     <span class="view-btn">VIEW DETAILS</span>
                 </div>
             </a>'''
-
-    pagination = '<div class="pagination">'
-    # ... (Same pagination logic as before) ...
-    pagination += "</div>"
 
     html = f"""<!DOCTYPE html>
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>समय - Premium Store</title>
+    <title>समय - Premium Watches</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -75,36 +65,18 @@ for page in range(total_pages):
     <div class="hero-slider">
         <div class="slide"><img src="https://images.unsplash.com/photo-1547996160-81dfa63595aa?q=80&w=1000"></div>
         <div class="slide"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000"></div>
-        <div class="slide"><img src="https://images.unsplash.com/photo-1508057198894-247b23fe5ade?q=80&w=1000"></div>
-    </div>
-
-    <div class="section-header">
-        <h3>Spotlight on Brands</h3>
-        <a href="#" class="see-all">See all ></a>
-    </div>
-    <div class="brand-logos">
-        <div class="brand-item">TITAN</div><div class="brand-item">SEIKO</div>
-        <div class="brand-item">CASIO</div><div class="brand-item">FASTRACK</div>
-    </div>
-
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search for watches...">
     </div>
 
     <div class="section-header"><h3>Latest Collection</h3></div>
-    <main class="home-container" id="postList">{cards_html}</main>
+    <main class="home-container">{cards_html if cards_html else "<p style='grid-column: 1/-1; text-align:center; padding:20px;'>No items found in Posts folder.</p>"}</main>
     
     <footer class="site-footer">
-        <p>© 2026 SAMAY | All Rights Reserved</p>
+        <p>© 2026 SAMAY | Premium Watches</p>
     </footer>
-
-    <script>
-        // ... (Same search script as before) ...
-    </script>
 </body>
 </html>"""
     
     filename = "index.html" if page == 0 else f"page{page+1}.html"
     with open(filename, "w", encoding="utf-8") as f: f.write(html)
 
-print("✅ Slider added and text removed!")
+print("✅ Site Updated! Brands and Search removed.")

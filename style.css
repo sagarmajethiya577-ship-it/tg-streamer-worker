@@ -1,116 +1,29 @@
-/* Reset & Base Styles */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #f8f9fa; color: #1a1a1a; }
+body { font-family: 'Segoe UI', sans-serif; background: #fff; color: #333; }
 
-/* Header - Logo & Icons */
-.site-header { 
-    display: flex; justify-content: space-between; align-items: center; 
-    padding: 12px 18px; background: #fff; position: sticky; top: 0; z-index: 100;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-}
-.logo { font-size: 26px; font-weight: 800; color: #002347; text-decoration: none; letter-spacing: -0.5px; }
-.nav-icons { display: flex; gap: 18px; align-items: center; }
-.nav-icons span { font-size: 20px; cursor: pointer; color: #444; }
+/* Header */
+.site-header { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #eee; position: sticky; top: 0; background: #fff; z-index: 100; }
+.logo { font-size: 24px; font-weight: bold; color: #002347; text-decoration: none; }
+.nav-icons span { font-size: 20px; margin-left: 15px; cursor: pointer; }
 
-/* Hero Banner - Mobile Responsive */
-.hero-banner {
-    background: #222 url('https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000') center/cover;
-    padding: 50px 20px; text-align: left; color: #fff; position: relative;
-}
-.hero-content { max-width: 250px; }
-.hero-banner h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; line-height: 1.2; }
-.hero-banner p { font-size: 13px; opacity: 0.9; margin-bottom: 18px; }
-.btn-explore { 
-    background: #b8860b; color: #fff; border: none; padding: 10px 24px; 
-    border-radius: 4px; font-weight: 600; font-size: 13px; cursor: pointer;
-}
+/* Slider */
+.hero-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; background: #000; }
+.hero-slider::-webkit-scrollbar { display: none; }
+.slide { min-width: 100%; scroll-snap-align: start; height: 280px; }
+.slide img { width: 100%; height: 100%; object-fit: cover; }
 
-/* Sections Styling */
-.section-header { 
-    display: flex; justify-content: space-between; align-items: center; 
-    padding: 20px 15px 10px;
-}
-.section-header h3 { font-size: 16px; font-weight: 700; color: #333; }
-.see-all { color: #002347; text-decoration: none; font-size: 13px; font-weight: 500; }
+/* Section Title */
+.section-header { padding: 20px 15px 10px; }
+.section-header h3 { font-size: 18px; font-weight: 700; color: #002347; }
 
-/* Brand Logos (Horizontal Scroll) */
-.brand-logos { 
-    display: flex; gap: 25px; padding: 10px 15px; overflow-x: auto; 
-    scrollbar-width: none; align-items: center;
-}
-.brand-logos::-webkit-scrollbar { display: none; }
-.brand-item { font-weight: 800; font-size: 14px; color: #777; white-space: nowrap; }
+/* Product Grid */
+.home-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 12px; }
+.post-card { background: #fff; border-radius: 12px; overflow: hidden; text-decoration: none; color: inherit; border: 1px solid #eee; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+.post-card img { width: 100%; height: 160px; object-fit: contain; background: #fff; padding: 10px; }
+.post-info { padding: 12px; text-align: center; }
+.post-info h2 { font-size: 13px; font-weight: 600; margin-bottom: 5px; height: 35px; overflow: hidden; }
+.price { font-size: 14px; font-weight: 700; color: #b8860b; }
+.view-btn { display: block; margin-top: 8px; padding: 6px; border: 1px solid #002347; border-radius: 4px; font-size: 11px; font-weight: bold; }
 
-/* Search Box */
-.search-container { padding: 10px 15px; }
-#searchInput { 
-    width: 100%; padding: 12px 15px; border: 1px solid #e0e0e0; 
-    border-radius: 8px; font-size: 14px; outline: none; background: #fff;
-}
-
-/* Product Grid - Exactly like Photo */
-.home-container {
-    display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 12px;
-}
-.post-card { 
-    background: #fff; border-radius: 12px; overflow: hidden; 
-    text-decoration: none; color: inherit; border: 1px solid #eee;
-    transition: transform 0.2s;
-}
-.post-card img { width: 100%; height: 160px; object-fit: contain; background: #fdfdfd; padding: 10px; }
-.post-info { padding: 12px; text-align: left; }
-.post-info h2 { font-size: 13px; font-weight: 600; margin-bottom: 4px; color: #444; height: 35px; overflow: hidden; }
-.price { font-size: 14px; font-weight: 700; color: #002347; margin-bottom: 4px; }
-.rating { color: #ffb400; font-size: 11px; margin-bottom: 8px; }
-.view-btn { 
-    display: block; width: 100%; padding: 8px; border: 1px solid #002347; 
-    color: #002347; border-radius: 4px; text-align: center; font-size: 11px; font-weight: 700;
-}
-
-/* Footer Styling */
-.site-footer { 
-    background: #002347; color: #fff; padding: 30px 20px; 
-    text-align: center; margin-top: 30px; font-size: 13px;
-}
-.payment-methods { margin-top: 15px; opacity: 0.7; letter-spacing: 2px; font-size: 11px; }
-
-/* Pagination Styling */
-.pagination { display: flex; justify-content: center; gap: 8px; margin: 25px 0; }
-.page-num, .page-btn { 
-    padding: 8px 14px; border: 1px solid #002347; text-decoration: none; 
-    color: #002347; border-radius: 4px; font-size: 14px; font-weight: 600;
-}
-.page-num.active { background: #002347; color: #fff; }
-
-
-/* Hero Slider Container */
-.hero-slider {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none; /* Firefox */
-    background: #f0f0f0;
-}
-.hero-slider::-webkit-scrollbar { display: none; } /* Chrome/Safari */
-
-.slide {
-    min-width: 100%;
-    scroll-snap-align: start;
-    position: relative;
-    height: 250px; /* Aap ise adjust kar sakte hain */
-}
-
-.slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-/* Banner se text hatane ke baad explore button ko center karne ke liye */
-.btn-explore-container {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
+/* Footer */
+.site-footer { background: #002347; color: #fff; padding: 25px; text-align: center; font-size: 12px; margin-top: 30px; }
