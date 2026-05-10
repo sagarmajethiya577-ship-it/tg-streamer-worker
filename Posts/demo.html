@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="hi" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Two Tone Watch No: 247 - OSTIN</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a href="/" class="logo">OSTIN</a>
+        <button id="themeToggle" class="theme-switch">🌙 Dark</button>
+    </header>
+    <div class="post-container">
+<img src="https://i.ibb.co/DH0gpcc6/55f11b8be8cc.jpg"/>
+<h1>Premium Two Tone Watch No: 247</h1>
+<p class="post-price">Price: ₹9,995</p>
+<p>Description: Ye watch premium leather strap ke saath aati hai.</p>
+<div class="shop-buttons">
+<a class="btn-amazon" href="https://www.amazon.in/">Buy on Amazon</a>
+<a class="btn-flipkart" href="https://www.flipkart.com/">Buy on Flipkart</a>
+<a class="btn-whatsapp" href="https://wa.me/YOUR_NUMBER">Order on WhatsApp</a>
+</div>
+</div>
+    <footer class="site-footer">
+        <p>© 2026 OSTIN | Premium Store</p>
+    </footer>
+    <script>
+    const toggleBtn = document.getElementById('themeToggle');
+    const htmlTag = document.documentElement;
+    toggleBtn.addEventListener('click', () => {
+        const theme = htmlTag.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        htmlTag.setAttribute('data-theme', theme);
+        toggleBtn.innerHTML = theme === 'dark' ? "☀️ Light" : "🌙 Dark";
+        localStorage.setItem('theme', theme);
+    });
+    if (localStorage.getItem('theme') === 'dark') {
+        htmlTag.setAttribute('data-theme', 'dark');
+        toggleBtn.innerHTML = "☀️ Light";
+    }
+    </script>
+</body>
+</html>
