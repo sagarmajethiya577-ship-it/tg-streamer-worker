@@ -1,3 +1,34 @@
+/* Logo Styling */
+.logo { 
+    font-size: 28px; 
+    font-weight: 900; 
+    color: var(--primary-color); 
+    text-decoration: none; 
+    letter-spacing: 2px;
+    font-family: 'Georgia', serif; /* Thoda stylish look ke liye */
+    text-transform: uppercase;
+}
+
+/* Post Content Styling (Jo post ke andar dikhega) */
+.post-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 15px;
+    background: var(--card-bg);
+}
+.post-header-img {
+    width: 100%;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+.post-details h1 { font-size: 22px; margin-bottom: 10px; }
+.post-details .post-price { font-size: 20px; color: #b8860b; font-weight: bold; margin-bottom: 15px; }
+.buy-now-btn {
+    display: block; width: 100%; padding: 15px; background: #002347;
+    color: #fff; text-align: center; text-decoration: none;
+    border-radius: 8px; font-weight: bold; margin-top: 20px;
+}
+
 :root {
     --bg-color: #ffffff;
     --text-color: #1a1a1a;
