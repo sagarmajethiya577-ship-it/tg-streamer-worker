@@ -98,7 +98,7 @@ def get_layout(title, body_content, is_index=False):
                     slider.scrollBy({{ left: slideWidth, behavior: 'smooth' }});
                 }}
             }}
-        }}, 2000);
+        }}, 3000);
 
         // Pause logic
         slider.addEventListener('touchstart', () => isPaused = true);
