@@ -65,7 +65,9 @@ def get_layout(title, body_content, is_index=False):
     <footer class="site-footer">
         <p>© 2026 OSTIN | Premium Store</p>
     </footer>
+
     <script>
+    // 1. THEME TOGGLE LOGIC
     const toggleBtn = document.getElementById('themeToggle');
     const htmlTag = document.documentElement;
     toggleBtn.addEventListener('click', () => {{
@@ -78,7 +80,34 @@ def get_layout(title, body_content, is_index=False):
         htmlTag.setAttribute('data-theme', 'dark');
         toggleBtn.innerHTML = "☀️ Light";
     }}
+
+    // 2. AUTO-SLIDE LOGIC (2 Seconds Interval)
+    const sliders = document.querySelectorAll('.hero-slider');
+    sliders.forEach(slider => {{
+        let isPaused = false;
+        setInterval(() => {{
+            if (!isPaused) {{
+                const slides = slider.querySelectorAll('.slide');
+                if (slides.length <= 1) return; 
+
+                const slideWidth = slides[0].clientWidth;
+                // Check if we are at the end
+                if (slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 5) {{
+                    slider.scrollTo({{ left: 0, behavior: 'smooth' }});
+                }} else {{
+                    slider.scrollBy({{ left: slideWidth, behavior: 'smooth' }});
+                }}
+            }}
+        }}, 2000);
+
+        // Pause logic
+        slider.addEventListener('touchstart', () => isPaused = true);
+        slider.addEventListener('mousedown', () => isPaused = true);
+        slider.addEventListener('touchend', () => setTimeout(() => isPaused = false, 4000));
+        slider.addEventListener('mouseup', () => setTimeout(() => isPaused = false, 4000));
+    }});
     </script>
+
 </body>
 </html>"""
 
