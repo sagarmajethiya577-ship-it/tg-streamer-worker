@@ -103,7 +103,8 @@ for post in all_posts_data:
 
 home_content = f"""
     <div class="hero-slider">
-        <div class="slide"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000"></div>
+        <div class="slide"><img src="https://i.ibb.co/WvtZpK45/1778433434933.png"></div>
+	<div class="slide"><img src="https://i.ibb.co/WvtZpK45/1778433434933.png"></div>
     </div>
     <div class="section-header"><h3>Latest Collection</h3></div>
     <main class="home-container">
