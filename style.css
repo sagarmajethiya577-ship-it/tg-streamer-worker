@@ -84,3 +84,43 @@ body { font-family: 'Segoe UI', sans-serif; background: var(--bg-color); color: 
 .spec-label { font-size: 11px; color: gray; text-transform: uppercase; }
 .spec-value { font-size: 13px; font-weight: bold; }
 
+
+
+
+/* 1. Root Variables Define Karein */
+:root[data-theme="light"] {
+    --text-color: #1a1a1a;
+    --bg-color: #ffffff;
+    --sub-text: #666666;
+    --border-color: #eeeeee;
+}
+
+:root[data-theme="dark"] {
+    --text-color: #ffffff; /* Dark mode mein text white ho jayega */
+    --bg-color: #121212;
+    --sub-text: #bbbbbb;
+    --border-color: #333333;
+}
+
+/* 2. In variables ko apne content par apply karein */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.post-details h1 {
+    color: var(--text-color); /* Title ab theme ke hisab se badlega */
+}
+
+.spec-label {
+    color: var(--sub-text);
+}
+
+.spec-value {
+    color: var(--text-color);
+}
+
+.specs-grid {
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+}
