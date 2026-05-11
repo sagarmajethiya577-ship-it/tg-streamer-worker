@@ -48,22 +48,29 @@ body {
     cursor: pointer; font-size: 13px; font-weight: 600;
 }
 
-/* 3. HERO SLIDER (Home & Post) */
+/* 1. HOME PAGE SLIDER (Isko chota karne ke liye) */
 .hero-slider { 
     display: flex; 
     overflow-x: auto; 
     scroll-snap-type: x mandatory; 
     scrollbar-width: none; 
     border-radius: 15px;
-    margin: 10px; /* Thoda side se gap */
+    margin: 10px; 
     background: #f9f9f9;
+    height: 220px; /* Home page par height fix kar di taaki zyada bada na lage */
 }
-.hero-slider::-webkit-scrollbar { display: none; }
+
+/* 2. POST PAGE SLIDER (Side gap kam karne aur bada dikhane ke liye) */
+.post-container .hero-slider {
+    margin: 0 -5px 10px -5px; /* Side margins minus mein di hain taaki side se chipak jaye */
+    border-radius: 0; /* Premium look ke liye post ke andar corners square rakhe hain, aap chahe to 15px rakh sakte hain */
+    height: auto; 
+    aspect-ratio: 1/1; /* Post ke andar watch square hi achhi lagegi */
+}
 
 .slide { 
     min-width: 100%; 
     scroll-snap-align: start;
-    aspect-ratio: 1 / 1; /* Square Image Support */
 }
 
 .slide img { 
@@ -71,7 +78,13 @@ body {
     height: 100%; 
     object-fit: cover; 
     display: block;
-    border-radius: 15px;
+}
+
+/* Post Container ka side padding thoda set kiya */
+.post-container { 
+    max-width: 600px; 
+    margin: 0 auto; 
+    padding: 0 10px 20px; 
 }
 
 /* 4. POST CONTENT & SPACING FIX */
