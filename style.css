@@ -1,3 +1,4 @@
+/* 1. VARIABLES & RESET */
 :root {
     --bg-color: #ffffff;
     --text-color: #1a1a1a;
@@ -5,6 +6,7 @@
     --card-bg: #ffffff;
     --border-color: #eeeeee;
     --primary-color: #002347;
+    --sub-text: #666666;
 }
 
 [data-theme="dark"] {
@@ -13,20 +15,28 @@
     --header-bg: #1e1e1e;
     --card-bg: #1e1e1e;
     --border-color: #333333;
+    --sub-text: #bbbbbb;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; transition: background 0.3s, color 0.3s; }
-body { font-family: 'Segoe UI', sans-serif; background: var(--bg-color); color: var(--text-color); }
 
+body { 
+    font-family: 'Segoe UI', Roboto, sans-serif; 
+    background: var(--bg-color); 
+    color: var(--text-color); 
+    line-height: 1.5;
+}
+
+/* 2. HEADER & LOGO */
 .site-header { 
     display: flex; justify-content: space-between; align-items: center; 
-    padding: 15px 20px; background: var(--header-bg); 
+    padding: 12px 20px; background: var(--header-bg); 
     border-bottom: 2px solid var(--border-color);
-    position: sticky; top: 0; z-index: 100;
+    position: sticky; top: 0; z-index: 1000;
 }
 
 .logo { 
-    font-size: 28px; font-weight: 900; color: var(--primary-color); 
+    font-size: 26px; font-weight: 900; color: var(--primary-color); 
     text-decoration: none; letter-spacing: 2px;
     font-family: 'Georgia', serif; text-transform: uppercase;
 }
@@ -34,128 +44,144 @@ body { font-family: 'Segoe UI', sans-serif; background: var(--bg-color); color: 
 
 .theme-switch {
     background: none; border: 1px solid var(--border-color);
-    color: var(--text-color); padding: 5px 12px; border-radius: 20px;
-    cursor: pointer; font-size: 14px; font-weight: 600;
+    color: var(--text-color); padding: 5px 15px; border-radius: 20px;
+    cursor: pointer; font-size: 13px; font-weight: 600;
 }
 
-.post-container { max-width: 600px; margin: 20px auto; padding: 15px; }
-.hero-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
-.slide { min-width: 100%; height: 250px; }
-.slide img { width: 100%; height: 100%; object-fit: cover; }
-
-.section-header { padding: 25px 15px 10px; border-bottom: 1px solid var(--border-color); margin-bottom: 15px; }
-.home-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px; }
-
-.post-card { background: var(--card-bg); border-radius: 12px; overflow: hidden; text-decoration: none; color: inherit; border: 1px solid var(--border-color); }
-.post-card img { width: 100%; height: 160px; object-fit: contain; padding: 10px; }
-.post-info { padding: 12px; text-align: center; }
-.view-btn { display: block; margin-top: 10px; padding: 8px; border: 1px solid var(--primary-color); border-radius: 4px; font-size: 11px; font-weight: bold; }
-.site-footer { padding: 30px; text-align: center; border-top: 1px solid var(--border-color); font-size: 12px; }
-
-/* Post Details Styling */
-.post-details h3 { margin-top: 20px; font-size: 18px; color: var(--primary-color); }
-.post-details ul li { font-size: 14px; color: var(--text-color); opacity: 0.9; }
-
-/* Slider height post ke liye fix karna */
-.post-container .hero-slider { border-radius: 12px; margin-bottom: 20px; height: 350px; }
-
-/* Product Page Enhancements */
-.brand-name { font-size: 14px; color: #b8860b; font-weight: bold; margin-bottom: 5px; }
-.tax-info { font-size: 12px; color: gray; font-weight: normal; }
-.separator { border: 0; border-top: 1px solid var(--border-color); margin: 20px 0; }
-
-/* Buttons */
-.action-buttons { display: flex; gap: 10px; margin: 20px 0; }
-.btn-buy, .btn-cart { 
-    flex: 1; padding: 15px; text-align: center; font-weight: bold; 
-    text-decoration: none; border-radius: 5px; 
-}
-.btn-buy { background: var(--primary-color); color: white; }
-.btn-cart { border: 2px solid var(--primary-color); color: var(--primary-color); }
-
-/* Specs Grid */
-.specs-section h3 { font-size: 14px; margin-bottom: 15px; letter-spacing: 1px; }
-.specs-grid { 
-    display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; 
-    background: var(--card-bg); padding: 15px; border: 1px solid var(--border-color);
-}
-.spec-item { text-align: center; }
-.spec-icon { font-size: 24px; display: block; margin-bottom: 5px; color: var(--primary-color); }
-.spec-label { font-size: 11px; color: gray; text-transform: uppercase; }
-.spec-value { font-size: 13px; font-weight: bold; }
-
-
-
-
-/* 1. Root Variables Define Karein */
-:root[data-theme="light"] {
-    --text-color: #1a1a1a;
-    --bg-color: #ffffff;
-    --sub-text: #666666;
-    --border-color: #eeeeee;
-}
-
-:root[data-theme="dark"] {
-    --text-color: #ffffff; /* Dark mode mein text white ho jayega */
-    --bg-color: #121212;
-    --sub-text: #bbbbbb;
-    --border-color: #333333;
-}
-
-/* 2. In variables ko apne content par apply karein */
-body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-}
-
-.post-details h1 {
-    color: var(--text-color); /* Title ab theme ke hisab se badlega */
-}
-
-.spec-label {
-    color: var(--sub-text);
-}
-
-.spec-value {
-    color: var(--text-color);
-}
-
-.specs-grid {
-    background: var(--bg-color);
-    border: 1px solid var(--border-color);
-}
-
-
-/* Image slider ke corners fix karne ke liye */
-.hero-slider {
-    border-radius: 15px; /* Charo taraf se round ho jayega */
-    overflow: hidden;    /* Taaki andar ki image bhi corners ke sath kat jaye */
-    margin-bottom: 5px !important; /* Title ke sath gap kam karne ke liye */
-    height: auto;        /* Image ki height ke hisab se adjust hoga */
-}
-
-.hero-slider .slide img {
+/* 3. HERO SLIDER (Home & Post) */
+.hero-slider { 
+    display: flex; 
+    overflow-x: auto; 
+    scroll-snap-type: x mandatory; 
+    scrollbar-width: none; 
     border-radius: 15px;
+    margin: 10px; /* Thoda side se gap */
+    background: #f9f9f9;
+}
+.hero-slider::-webkit-scrollbar { display: none; }
+
+.slide { 
+    min-width: 100%; 
+    scroll-snap-align: start;
+    aspect-ratio: 1 / 1; /* Square Image Support */
+}
+
+.slide img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
     display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Square image ekdum sahi fit baithegi */
+    border-radius: 15px;
 }
 
-/* Title aur Price ki spacing fix */
-.post-details {
-    padding-top: 0px !important; /* Upar ki extra jagh khatam */
+/* 4. POST CONTENT & SPACING FIX */
+.post-container { 
+    max-width: 600px; 
+    margin: 0 auto; 
+    padding: 0 15px 20px; /* Top padding zero ki hai gap hatane ke liye */
 }
 
-.post-details h1 {
-    margin-top: 5px !important;
-    margin-bottom: 0px !important;
-    font-size: 20px;
-    line-height: 1.2;
-}
+.post-details { padding-top: 0; margin-top: -5px; }
 
-.brand-name {
-    margin-top: 10px;
+.brand-name { 
+    font-size: 13px; 
+    color: #b8860b; 
+    font-weight: bold; 
+    letter-spacing: 1px;
     margin-bottom: 2px;
 }
 
+.post-details h1 { 
+    font-size: 22px; 
+    font-weight: 700; 
+    margin-bottom: 5px; 
+    color: var(--text-color);
+    line-height: 1.2;
+}
+
+.post-price { 
+    font-size: 20px; 
+    font-weight: 800; 
+    color: var(--text-color); 
+}
+
+.tax-info { font-size: 12px; color: var(--sub-text); font-weight: normal; }
+
+/* 5. PRODUCT SPECS GRID */
+.specs-section { margin-top: 25px; }
+.specs-section h3 { 
+    font-size: 14px; 
+    margin-bottom: 12px; 
+    color: var(--text-color); 
+    text-transform: uppercase; 
+    letter-spacing: 1px;
+}
+
+.specs-grid { 
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 1px; /* Line effect ke liye */
+    background: var(--border-color); 
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.spec-item { 
+    background: var(--card-bg); 
+    padding: 15px; 
+    text-align: center; 
+}
+
+.spec-icon { font-size: 22px; display: block; margin-bottom: 5px; color: var(--primary-color); }
+.spec-label { font-size: 10px; color: var(--sub-text); text-transform: uppercase; }
+.spec-value { font-size: 13px; font-weight: 700; color: var(--text-color); }
+
+/* 6. BUTTONS */
+.action-buttons { display: flex; gap: 10px; margin: 20px 0; }
+.btn-buy, .btn-cart { 
+    flex: 1; padding: 14px; text-align: center; font-weight: bold; 
+    text-decoration: none; border-radius: 8px; font-size: 14px;
+}
+.btn-buy { background: var(--primary-color); color: white; }
+.btn-cart { border: 2px solid var(--primary-color); color: var(--primary-color); background: transparent; }
+
+/* 7. HOME GRID (Post Cards) */
+.home-container { 
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 12px; 
+    padding: 12px; 
+}
+
+.post-card { 
+    background: var(--card-bg); 
+    border-radius: 12px; 
+    overflow: hidden; 
+    text-decoration: none; 
+    color: inherit; 
+    border: 1px solid var(--border-color); 
+}
+
+.post-card img { width: 100%; aspect-ratio: 1/1; object-fit: contain; padding: 10px; }
+.post-info { padding: 10px; text-align: center; }
+.post-info h2 { font-size: 13px; height: 35px; overflow: hidden; margin-bottom: 5px; }
+
+.price { font-weight: bold; font-size: 14px; color: #b8860b; }
+
+.view-btn { 
+    display: block; margin-top: 8px; padding: 6px; 
+    border: 1px solid var(--primary-color); 
+    border-radius: 4px; font-size: 10px; font-weight: bold; 
+}
+
+/* 8. FOOTER */
+.site-footer { 
+    padding: 40px 20px; 
+    text-align: center; 
+    border-top: 1px solid var(--border-color); 
+    font-size: 12px; 
+    color: var(--sub-text); 
+}
+
+.separator { border: 0; border-top: 1px solid var(--border-color); margin: 20px 0; }
