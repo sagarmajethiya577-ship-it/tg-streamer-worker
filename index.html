@@ -10,7 +10,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Movies Zone 🍿</title>
+<title>Movies Zone</title>
 <link rel="stylesheet" href="style.css">
 <style>
     .pagination { display: flex; justify-content: center; align-items: center; gap: 5px; margin: 30px 10px; flex-wrap: wrap; }
@@ -25,7 +25,7 @@
 
 <header class="site-header">
     <div class="header-content">
-        <a href="/" class="site-title">Movies Zone 🍿</a>
+        <a href="/" class="site-title">Movies Zone</a>
         <div class="search-wrapper">
             <input type="text" id="searchInput" placeholder="Search Movies or WEB-Series here">
             <button id="searchBtn">SEARCH</button>
@@ -33,9 +33,9 @@
     </div>
 </header>
 
-<main class="home-container" id="postList"><a class="post-card" href="Posts/new.html"><img src="https://i.ibb.co/dsH4bXCJ/1778486119281.png"><h2>Luxury Gold Skeleton Automatic Watch</h2></a><a class="post-card" href="Posts/demo3.html"><img src="https://i.ibb.co/WvtZpK45/1778433434933.png"><h2>Fashion Men Quartz Green Dial Analog Watch</h2></a></main>
+<main class="home-container" id="postList"><a class="post-card" href="Posts/p1/Welcome-to-the-Jungle-2026-Hindi-Movie-HDTC.html"><img src="https://iili.io/CAiZlbs.jpg"><h2>Welcome to the Jungle (2026) Hindi Full Movie ESub 480p [490MB] | 720p [1.3GB] | 1080p [2.9GB] – HDTC</h2></a><a class="post-card" href="Posts/p1/The-Sheep-Detectives-2026-DS4K-Dual-Audio-Hindi-English-Movie-WEB-DL-ESub.html"><img src="https://iili.io/CAitFhG.jpg"><h2>The Sheep Detectives (2026) Dual Audio [Hindi 5.1 + English 5.1] Full Movie ESub 480p [450MB] | 720p [1.3GB] | 1080p [2.7GB] – WEB-DL</h2></a><a class="post-card" href="Posts/p1/Raja-Shivaji-2026-Hindi-Movie-WEB-DL-ESub.html"><img src="https://iili.io/CAiZvXj.jpg"><h2>Raja Shivaji (2026) Hindi 5.1 Full Movie ESub 480p [630MB] | 720p [1.8GB] | 1080p [3.8GB] – WEB-DL</h2></a><a class="post-card" href="Posts/p1/Lingam-S1-2026-Hindi-Completed-Web-Series-WEB-DL-ESub.html"><img src="https://iili.io/CAiQdFI.jpg"><h2>Lingam S1 (2026) Hindi 5.1 Complete Web Series ESub 480p [780MB] | 720p [1.6GB] | 1080p [4.1GB] – WEB-DL</h2></a><a class="post-card" href="Posts/p1/Avatar-The-Last-Airbender-S01-02-Dual-Audio-Hindi-English-Completed-Web-Series-WEB-DL-ESub.html"><img src="https://iili.io/CAiZC5F.jpg"><h2>Avatar The Last Airbender (Season 1 – 2) Dual Audio [Hindi 5.1 + English 5.1] Complete Web Series ESub 480p | 720p | 1080p – WEB-DL</h2></a><a class="post-card" href="Posts/new.html"><img src="https://i.ibb.co/dsH4bXCJ/1778486119281.png"><h2>Luxury Gold Skeleton Automatic Watch</h2></a><a class="post-card" href="Posts/demo3.html"><img src="https://i.ibb.co/WvtZpK45/1778433434933.png"><h2>Fashion Men Quartz Green Dial Analog Watch</h2></a></main>
 <div class="pagination"><a href="index.html" class="page-num active">1</a></div>
-<footer class="site-footer">© 2026 Movies Zone 🍿 | All Rights Reserved</footer>
+<footer class="site-footer">© 2026 Movies Zone | All Rights Reserved</footer>
 
 <script>
 let movieData = [];
@@ -55,13 +55,11 @@ const originalContent = postList.innerHTML;
 function performSearch() {
     const val = input.value.toLowerCase().trim();
     
-    // Agar input khali ya bohot chota hai to original content dikhao
     if (val.length < 2) { 
         postList.innerHTML = originalContent; 
         return; 
     }
     
-    // Word-by-word advanced filtering (Smart Match)
     const searchWords = val.split(/\s+/); 
     const res = movieData.filter(m => {
         const titleLower = m.t.toLowerCase();
@@ -75,7 +73,6 @@ function performSearch() {
     }
 }
 
-// Dono events par trigger hoga: Type karte time bhi aur Button click karne par bhi
 input.addEventListener("input", performSearch);
 searchBtn.addEventListener("click", performSearch);
 </script>
