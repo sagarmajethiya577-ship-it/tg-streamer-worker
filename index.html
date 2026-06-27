@@ -1,86 +1,82 @@
 <!DOCTYPE html>
-<html lang="hi" data-theme="light">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - OSTIN</title>
-    <link rel="stylesheet" href="style.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XRNB9X1DJ2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XRNB9X1DJ2');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Movies Zone 🍿</title>
+<link rel="stylesheet" href="style.css">
+<style>
+    .pagination { display: flex; justify-content: center; align-items: center; gap: 5px; margin: 30px 10px; flex-wrap: wrap; }
+    .page-btn, .page-num { padding: 8px 12px; border: 1px solid #00ff88; color: #00ff88; text-decoration: none; border-radius: 4px; font-size: 14px; min-width: 35px; text-align: center; }
+    .page-num.active { background: #00ff88; color: #000; font-weight: bold; border-color: #00ff88; }
+    .dots { color: #00ff88; padding: 0 5px; }
+    .page-btn:hover, .page-num:hover:not(.active) { background: rgba(0, 255, 136, 0.1); }
+    @media (max-width: 600px) { .page-btn { font-size: 12px; padding: 6px 10px; } }
+</style>
 </head>
 <body>
-    <header class="site-header">
-        <a href="/" class="logo">OSTIN</a>
-        <button id="themeToggle" class="theme-switch">🌙 Dark</button>
-    </header>
-    
-    <div class="hero-slider">
-        <div class="slide"><img src="https://i.ibb.co/WvtZpK45/1778433434933.png"></div>
-	<div class="slide"><img src="https://i.ibb.co/WvtZpK45/1778433434933.png"></div>
+
+<header class="site-header">
+    <div class="header-content">
+        <a href="/" class="site-title">Movies Zone 🍿</a>
+        <div class="search-wrapper">
+            <input type="text" id="searchInput" placeholder="Search Movies or WEB-Series here">
+            <button id="searchBtn">SEARCH</button>
+        </div>
     </div>
-    <div class="section-header"><h3>Latest Collection</h3></div>
-    <main class="home-container">
-        
-    <a class="post-card" href="Posts/demo3.html">
-        <img src="https://i.ibb.co/WvtZpK45/1778433434933.png">
-        <div class="post-info">
-            <h2>Fashion Men Quartz Green Dial Analog Watch</h2>
-            <p class="price">₹9,995</p>
-            <span class="view-btn">VIEW DETAILS</span>
-        </div>
-    </a>
-    <a class="post-card" href="Posts/new.html">
-        <img src="https://i.ibb.co/dsH4bXCJ/1778486119281.png">
-        <div class="post-info">
-            <h2>Luxury Gold Skeleton Automatic Watch</h2>
-            <p class="price">₹9,995</p>
-            <span class="view-btn">VIEW DETAILS</span>
-        </div>
-    </a>
-    </main>
-    <footer class="site-footer">
-        <p>© 2026 OSTIN | Premium Store</p>
-    </footer>
+</header>
 
-    <script>
-    // 1. THEME TOGGLE LOGIC
-    const toggleBtn = document.getElementById('themeToggle');
-    const htmlTag = document.documentElement;
-    toggleBtn.addEventListener('click', () => {
-        const theme = htmlTag.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-        htmlTag.setAttribute('data-theme', theme);
-        toggleBtn.innerHTML = theme === 'dark' ? "☀️ Light" : "🌙 Dark";
-        localStorage.setItem('theme', theme);
-    });
-    if (localStorage.getItem('theme') === 'dark') {
-        htmlTag.setAttribute('data-theme', 'dark');
-        toggleBtn.innerHTML = "☀️ Light";
+<main class="home-container" id="postList"><a class="post-card" href="Posts/new.html"><img src="https://i.ibb.co/dsH4bXCJ/1778486119281.png"><h2>Luxury Gold Skeleton Automatic Watch</h2></a><a class="post-card" href="Posts/demo3.html"><img src="https://i.ibb.co/WvtZpK45/1778433434933.png"><h2>Fashion Men Quartz Green Dial Analog Watch</h2></a></main>
+<div class="pagination"><a href="index.html" class="page-num active">1</a></div>
+<footer class="site-footer">© 2026 Movies Zone 🍿 | All Rights Reserved</footer>
+
+<script>
+let movieData = [];
+async function loadSearchData() { 
+    try {
+        const res = await fetch('search_data.json'); 
+        movieData = await res.json(); 
+    } catch(e) { console.error("Error loading search data", e); }
+}
+loadSearchData();
+
+const input = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchBtn");
+const postList = document.getElementById("postList");
+const originalContent = postList.innerHTML;
+
+function performSearch() {
+    const val = input.value.toLowerCase().trim();
+    
+    // Agar input khali ya bohot chota hai to original content dikhao
+    if (val.length < 2) { 
+        postList.innerHTML = originalContent; 
+        return; 
     }
-
-    // 2. AUTO-SLIDE LOGIC (2 Seconds Interval)
-    const sliders = document.querySelectorAll('.hero-slider');
-    sliders.forEach(slider => {
-        let isPaused = false;
-        setInterval(() => {
-            if (!isPaused) {
-                const slides = slider.querySelectorAll('.slide');
-                if (slides.length <= 1) return; 
-
-                const slideWidth = slides[0].clientWidth;
-                // Check if we are at the end
-                if (slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 5) {
-                    slider.scrollTo({ left: 0, behavior: 'smooth' });
-                } else {
-                    slider.scrollBy({ left: slideWidth, behavior: 'smooth' });
-                }
-            }
-        }, 3000);
-
-        // Pause logic
-        slider.addEventListener('touchstart', () => isPaused = true);
-        slider.addEventListener('mousedown', () => isPaused = true);
-        slider.addEventListener('touchend', () => setTimeout(() => isPaused = false, 4000));
-        slider.addEventListener('mouseup', () => setTimeout(() => isPaused = false, 4000));
+    
+    // Word-by-word advanced filtering (Smart Match)
+    const searchWords = val.split(/\s+/); 
+    const res = movieData.filter(m => {
+        const titleLower = m.t.toLowerCase();
+        return searchWords.every(word => titleLower.includes(word));
     });
-    </script>
+    
+    if (res.length > 0) { 
+        postList.innerHTML = res.map(m => `<a class="post-card" href="${m.u}"><img src="${m.i}"><h2>${m.t}</h2></a>`).join(""); 
+    } else { 
+        postList.innerHTML = "<p style='color:white; text-align:center; width:100%; margin: 50px 0;'>No movies found!</p>"; 
+    }
+}
 
-</body>
-</html>
+// Dono events par trigger hoga: Type karte time bhi aur Button click karne par bhi
+input.addEventListener("input", performSearch);
+searchBtn.addEventListener("click", performSearch);
+</script>
+</body></html>

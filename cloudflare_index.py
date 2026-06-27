@@ -76,13 +76,20 @@ for page in range(total_pages):
     
     pagination += "</div>"
 
-    # HTML Template (Design fix included)
+    # HTML Template
     html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XRNB9X1DJ2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{dataLayer.push(arguments);}}
+  gtag('js', new Date());
+  gtag('config', 'G-XRNB9X1DJ2');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Movie Zone 🍿</title>
+<title>Movies Zone 🍿</title>
 <link rel="stylesheet" href="style.css">
 <style>
     .pagination {{ display: flex; justify-content: center; align-items: center; gap: 5px; margin: 30px 10px; flex-wrap: wrap; }}
@@ -94,27 +101,66 @@ for page in range(total_pages):
 </style>
 </head>
 <body>
-<header class="site-header"><a href="/" class="site-title">Movie Zone 🍿</a><p class="tagline">Latest Movies & Web Series</p></header>
-<div class="search-box" style="text-align:center; margin: 20px 0;"><input type="text" id="searchInput" placeholder="Search all movies..." style="width: 90%; max-width: 500px; padding: 12px; border-radius: 8px; border: 1px solid #444; background: #222; color: white; outline: none;"></div>
+
+<header class="site-header">
+    <div class="header-content">
+        <a href="/" class="site-title">Movies Zone 🍿</a>
+        <div class="search-wrapper">
+            <input type="text" id="searchInput" placeholder="Search Movies or WEB-Series here">
+            <button id="searchBtn">SEARCH</button>
+        </div>
+    </div>
+</header>
+
 <main class="home-container" id="postList">{cards_html}</main>
 {pagination}
 <footer class="site-footer">© 2026 Movies Zone 🍿 | All Rights Reserved</footer>
+
 <script>
 let movieData = [];
-async function loadSearchData() {{ const res = await fetch('search_data.json'); movieData = await res.json(); }}
+async function loadSearchData() {{ 
+    try {{
+        const res = await fetch('search_data.json'); 
+        movieData = await res.json(); 
+    }} catch(e) {{ console.error("Error loading search data", e); }}
+}}
 loadSearchData();
-const input = document.getElementById("searchInput"), postList = document.getElementById("postList"), originalContent = postList.innerHTML;
-input.addEventListener("input", function () {{
+
+const input = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchBtn");
+const postList = document.getElementById("postList");
+const originalContent = postList.innerHTML;
+
+function performSearch() {{
     const val = input.value.toLowerCase().trim();
-    if (val.length < 2) {{ postList.innerHTML = originalContent; return; }}
-    const res = movieData.filter(m => m.t.toLowerCase().includes(val));
-    if (res.length > 0) {{ postList.innerHTML = res.map(m => `<a class="post-card" href="${{m.u}}"><img src="${{m.i}}"><h2>${{m.t}}</h2></a>`).join(""); }}
-    else {{ postList.innerHTML = "<p style='color:white; text-align:center; width:100%;'>No movies found!</p>"; }}
-}});
+    
+    // Agar input khali ya bohot chota hai to original content dikhao
+    if (val.length < 2) {{ 
+        postList.innerHTML = originalContent; 
+        return; 
+    }}
+    
+    // Word-by-word advanced filtering (Smart Match)
+    const searchWords = val.split(/\s+/); 
+    const res = movieData.filter(m => {{
+        const titleLower = m.t.toLowerCase();
+        return searchWords.every(word => titleLower.includes(word));
+    }});
+    
+    if (res.length > 0) {{ 
+        postList.innerHTML = res.map(m => `<a class="post-card" href="${{m.u}}"><img src="${{m.i}}"><h2>${{m.t}}</h2></a>`).join(""); 
+    }} else {{ 
+        postList.innerHTML = "<p style='color:white; text-align:center; width:100%; margin: 50px 0;'>No movies found!</p>"; 
+    }}
+}}
+
+// Dono events par trigger hoga: Type karte time bhi aur Button click karne par bhi
+input.addEventListener("input", performSearch);
+searchBtn.addEventListener("click", performSearch);
 </script>
 </body></html>"""
     
     filename = "index.html" if page == 0 else f"page{page+1}.html"
     with open(filename, "w", encoding="utf-8") as f: f.write(html)
 
-print("✅ Fixed! Smart pagination is now active.")
+print("✅ Index codes regenerated with RogMovies style & Smart Search successfully!")
