@@ -76,7 +76,7 @@ for page in range(total_pages):
     
     pagination += "</div>"
 
-    # HTML Template (Using fr for resolving escape warning)
+    # HTML Template (Popcorn aur side icon completely removed)
     html = fr"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -89,7 +89,7 @@ for page in range(total_pages):
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Movies Zone 🍿</title>
+<title>Movies Zone</title>
 <link rel="stylesheet" href="style.css">
 <style>
     .pagination {{ display: flex; justify-content: center; align-items: center; gap: 5px; margin: 30px 10px; flex-wrap: wrap; }}
@@ -104,7 +104,7 @@ for page in range(total_pages):
 
 <header class="site-header">
     <div class="header-content">
-        <a href="/" class="site-title">Movies Zone 🍿</a>
+        <a href="/" class="site-title">Movies Zone</a>
         <div class="search-wrapper">
             <input type="text" id="searchInput" placeholder="Search Movies or WEB-Series here">
             <button id="searchBtn">SEARCH</button>
@@ -114,7 +114,7 @@ for page in range(total_pages):
 
 <main class="home-container" id="postList">{cards_html}</main>
 {pagination}
-<footer class="site-footer">© 2026 Movies Zone 🍿 | All Rights Reserved</footer>
+<footer class="site-footer">© 2026 Movies Zone | All Rights Reserved</footer>
 
 <script>
 let movieData = [];
@@ -160,4 +160,4 @@ searchBtn.addEventListener("click", performSearch);
     filename = "index.html" if page == 0 else f"page{page+1}.html"
     with open(filename, "w", encoding="utf-8") as f: f.write(html)
 
-print("✅ Index codes regenerated with premium font style successfully!")
+print("✅ Index codes regenerated with balanced brand fonts and clean header successfully!")

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Oswald:wght@700;900&display=swap');
 
 * {
   box-sizing: border-box;
@@ -12,7 +12,7 @@ body {
   line-height: 1.7;
 }
 
-/* ================= PREMIUM HEADER & SEARCH ================= */
+/* ================= PREMIUM HEADER & SEARCH (ROGMOVIES BRAND LOOK) ================= */
 
 .site-header {
   background: linear-gradient(180deg, #180828 0%, #090214 100%);
@@ -30,20 +30,22 @@ body {
   gap: 15px;
 }
 
-/* Yahan Font Design Update Kiya Hai */
+/* Popcorn hataya aur Brand Fonts ko balanced, modern aur sleek kiya */
 .site-title {
   text-decoration: none;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 45px;
-  letter-spacing: 3px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 38px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
   color: #ffffff;
   text-transform: uppercase;
   background: linear-gradient(45deg, #ff007f, #00ffd5);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.6));
   display: inline-block;
-  line-height: 1;
+  line-height: 1.1;
+  font-style: italic; /* Dynamic slant look jo premium brands me hota hai */
 }
 
 .site-title:hover {
@@ -97,7 +99,7 @@ body {
 /* Responsive adjust for smaller mobiles */
 @media (max-width: 400px) {
   .site-title {
-    font-size: 36px;
+    font-size: 30px;
   }
   #searchInput {
     padding: 12px 15px;
