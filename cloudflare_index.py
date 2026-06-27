@@ -76,8 +76,8 @@ for page in range(total_pages):
     
     pagination += "</div>"
 
-    # HTML Template
-    html = f"""<!DOCTYPE html>
+    # HTML Template (Using fr for resolving escape warning)
+    html = fr"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-XRNB9X1DJ2"></script>
@@ -134,13 +134,11 @@ const originalContent = postList.innerHTML;
 function performSearch() {{
     const val = input.value.toLowerCase().trim();
     
-    // Agar input khali ya bohot chota hai to original content dikhao
     if (val.length < 2) {{ 
         postList.innerHTML = originalContent; 
         return; 
     }}
     
-    // Word-by-word advanced filtering (Smart Match)
     const searchWords = val.split(/\s+/); 
     const res = movieData.filter(m => {{
         const titleLower = m.t.toLowerCase();
@@ -154,7 +152,6 @@ function performSearch() {{
     }}
 }}
 
-// Dono events par trigger hoga: Type karte time bhi aur Button click karne par bhi
 input.addEventListener("input", performSearch);
 searchBtn.addEventListener("click", performSearch);
 </script>
@@ -163,4 +160,4 @@ searchBtn.addEventListener("click", performSearch);
     filename = "index.html" if page == 0 else f"page{page+1}.html"
     with open(filename, "w", encoding="utf-8") as f: f.write(html)
 
-print("✅ Index codes regenerated with RogMovies style & Smart Search successfully!")
+print("✅ Index codes regenerated with premium font style successfully!")
