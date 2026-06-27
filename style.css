@@ -12,7 +12,7 @@ body {
   line-height: 1.7;
 }
 
-/* ================= PREMIUM HEADER & SEARCH (ROGMOVIES BRAND LOOK) ================= */
+/* ================= PREMIUM HEADER & SEARCH ================= */
 
 .site-header {
   background: linear-gradient(180deg, #180828 0%, #090214 100%);
@@ -30,7 +30,6 @@ body {
   gap: 15px;
 }
 
-/* Popcorn hataya aur Brand Fonts ko balanced, modern aur sleek kiya */
 .site-title {
   text-decoration: none;
   font-family: 'Oswald', sans-serif;
@@ -45,7 +44,7 @@ body {
   filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.6));
   display: inline-block;
   line-height: 1.1;
-  font-style: italic; /* Dynamic slant look jo premium brands me hota hai */
+  font-style: italic;
 }
 
 .site-title:hover {

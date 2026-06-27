@@ -76,7 +76,7 @@ for page in range(total_pages):
     
     pagination += "</div>"
 
-    # HTML Template (Popcorn aur side icon completely removed)
+    # HTML Template (Header block aur footer pop-corn emoji clear kiya)
     html = fr"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -160,4 +160,4 @@ searchBtn.addEventListener("click", performSearch);
     filename = "index.html" if page == 0 else f"page{page+1}.html"
     with open(filename, "w", encoding="utf-8") as f: f.write(html)
 
-print("✅ Index codes regenerated with balanced brand fonts and clean header successfully!")
+print("✅ Index codes regenerated. Popcorn removed perfectly!")
