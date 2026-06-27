@@ -45,7 +45,11 @@ body {
   display: inline-block;
   line-height: 1.1;
   font-style: italic;
-}
+  
+  /* YAHAN FIX KIYA HAI: 'E' ko katne se rokne ke liye right side me space diya */
+  padding-right: 8px;
+  font-display: swap;
+}}
 
 .site-title:hover {
   opacity: 0.9;
