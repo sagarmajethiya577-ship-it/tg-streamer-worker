@@ -76,10 +76,12 @@ for page in range(total_pages):
     
     pagination += "</div>"
 
-    # HTML Template (Header block aur footer pop-corn emoji clear kiya)
+    # HTML Template (Added Nav Menu & Categories)
     html = fr"""<!DOCTYPE html>
 <html lang="en">
 <head>
+<script src="https://bleatbehind.com/77/19/55/7719558a2ddf75875325865ff105e8f4.js"></script>
+
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-XRNB9X1DJ2"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -102,6 +104,17 @@ for page in range(total_pages):
 </head>
 <body>
 
+<!-- NEW: Navigation Menu -->
+<nav class="nav-menu">
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Movies</a></li>
+        <li><a href="#">Web Series</a></li>
+        <li><a href="#">Request</a></li>
+        <li><a href="#">DMCA</a></li>
+    </ul>
+</nav>
+
 <header class="site-header">
     <div class="header-content">
         <a href="/" class="site-title">Movies Zone</a>
@@ -109,6 +122,17 @@ for page in range(total_pages):
             <input type="text" id="searchInput" placeholder="Search Movies or WEB-Series here">
             <button id="searchBtn">SEARCH</button>
         </div>
+        
+        <!-- NEW: Category Buttons under search -->
+        <div class="category-container">
+            <button class="cat-btn">Action</button>
+            <button class="cat-btn">Comedy</button>
+            <button class="cat-btn">Horror</button>
+            <button class="cat-btn">Sci-Fi</button>
+            <button class="cat-btn">Romance</button>
+            <button class="cat-btn">Thriller</button>
+        </div>
+        
     </div>
 </header>
 
@@ -160,4 +184,4 @@ searchBtn.addEventListener("click", performSearch);
     filename = "index.html" if page == 0 else f"page{page+1}.html"
     with open(filename, "w", encoding="utf-8") as f: f.write(html)
 
-print("✅ Index codes regenerated. Popcorn removed perfectly!")
+print("✅ Design updated with Menu Bar and Category Buttons!")

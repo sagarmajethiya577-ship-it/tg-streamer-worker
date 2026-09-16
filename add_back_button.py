@@ -18,7 +18,7 @@ for root, dirs, files in os.walk(POSTS_DIR):
         if "<body>" in content:
             new_content = content.replace(
                 "<body>",
-                '<body>\n<a href="../../index.html" class="back-btn">← Back</a>\n',
+                '<body>\n<a href="/" class="back-btn">← Back</a>\n',
                 1
             )
 
@@ -28,3 +28,4 @@ for root, dirs, files in os.walk(POSTS_DIR):
             print("✅ Back button added:", path)
 
 print("🎉 Back button process complete")
+
