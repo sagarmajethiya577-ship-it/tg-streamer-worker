@@ -11,7 +11,8 @@ POSTS_PER_PAGE = 200
 all_files = []
 collections = defaultdict(list)
 
-LANGUAGES = ["Hindi", "English", "Gujarati", "Marathi", "Punjabi", "Bengali", "Tamil", "Telugu", "Malayalam", "Bhojpuri", "French", "Spanish"]
+# Hindi yahan se nikal diya gaya hai
+LANGUAGES = ["English", "Gujarati", "Marathi", "Punjabi", "Bengali", "Tamil", "Telugu", "Malayalam", "Bhojpuri", "French", "Spanish"]
 GENRES = ["Action", "Comedy", "Horror", "Sci-Fi", "Romance", "Thriller", "Drama", "Fantasy", "Animation", "Crime", "Adventure", "Mystery", "18+ Content"]
 INDUSTRIES = ["Bollywood", "Hollywood"]
 
@@ -32,7 +33,6 @@ for root, dirs, files in os.walk(POSTS_DIR):
                     full_text = (title + " " + soup.get_text(separator=" ")).lower()
                     mtime = os.path.getmtime(path)
                     
-                    # Absolute URL for posts so search works from everywhere
                     movie_data = {"t": title, "u": "/" + path.replace("\\", "/"), "i": img_src}
                     all_files.append((path, movie_data, full_text, mtime))
             except: continue
@@ -68,9 +68,8 @@ with open("search_data.json", "w", encoding="utf-8") as f:
 def slugify(text):
     return re.sub(r'[^a-z0-9]+', '-', text.lower()).strip('-')
 
-# 2. Generate UI (Removed Counts from Links)
+# 2. Generate UI Sidebar & Buttons
 def generate_ui():
-    # Only names, no length counts like (11)
     genre_links = [f'<a href="/{slugify(g)}.html">{g}</a>' for g in GENRES if len(collections[g]) > 0]
     lang_links = [f'<a href="/{slugify(l)}.html">{l}</a>' for l in LANGUAGES if len(collections[l]) > 0]
     year_keys = sorted([k for k in collections.keys() if re.match(r'^(19|20)\d\d$', k)], reverse=True)
@@ -100,7 +99,7 @@ def generate_ui():
 
 sidebar_html, buttons_html = generate_ui()
 
-# 3. Master HTML Template (Works for Home, Categories AND Posts)
+# 3. Master HTML Template (Search Fix applied for Post Pages)
 master_template = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -150,12 +149,20 @@ master_template = f"""<!DOCTYPE html>
 
 <main class="<!-- MAIN_CLASS -->" style="display:block;">
     <!-- PAGE_TITLE -->
-    <!-- CONTENT_HTML -->
+    
+    <!-- Yahan Search Results Dikhenge (Default Hidden) -->
+    <div class="home-container" id="searchResults" style="display:none; padding:0; margin:0; width:100%;"></div>
+    
+    <!-- Yahan Original Post ya Grid Dikhega -->
+    <div id="originalContent" style="width:100%;">
+        <!-- CONTENT_HTML -->
+    </div>
 </main>
 <!-- PAGINATION -->
 <footer class="site-footer">© 2026 Movies Zone | All Rights Reserved</footer>
 
 <script>
+// Sidebar Control
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('sidebarOverlay');
 const openBtn = document.getElementById('openSidebar');
@@ -166,6 +173,7 @@ openBtn.addEventListener('click', openMenu);
 closeBtn.addEventListener('click', closeMenu);
 overlay.addEventListener('click', closeMenu);
 
+// Accordion Control
 const accHeaders = document.querySelectorAll('.accordion-header');
 accHeaders.forEach(header => {{
     header.addEventListener('click', function() {{
@@ -176,6 +184,7 @@ accHeaders.forEach(header => {{
     }});
 }});
 
+// Advanced Search Logic for All Pages
 let movieData = [];
 async function loadSearchData() {{ 
     try {{ const res = await fetch('/search_data.json'); movieData = await res.json(); }} 
@@ -185,13 +194,20 @@ loadSearchData();
 
 const input = document.getElementById("searchInput");
 const searchBtn = document.getElementById("searchBtn");
-const postList = document.getElementById("postList");
-const originalContent = postList ? postList.innerHTML : "";
+const searchResults = document.getElementById("searchResults");
+const originalContent = document.getElementById("originalContent");
+const paginationWrapper = document.getElementById("paginationWrapper");
 
 function performSearch() {{
-    if(!postList) return; // Prevent search errors inside a post page
     const val = input.value.toLowerCase().trim();
-    if (val.length < 2) {{ postList.innerHTML = originalContent; return; }}
+    
+    // Agar search khali hai toh original content wapas dikhao
+    if (val.length < 2) {{ 
+        searchResults.style.display = "none";
+        originalContent.style.display = "block";
+        if (paginationWrapper) paginationWrapper.style.display = "flex";
+        return; 
+    }}
     
     const searchWords = val.split(/\s+/); 
     const res = movieData.filter(m => {{
@@ -199,10 +215,15 @@ function performSearch() {{
         return searchWords.every(word => titleLower.includes(word));
     }});
     
+    // Result milne par original content (post/page) chupao aur result grid dikhao
+    originalContent.style.display = "none";
+    if (paginationWrapper) paginationWrapper.style.display = "none";
+    searchResults.style.display = "grid";
+    
     if (res.length > 0) {{ 
-        postList.innerHTML = res.map(m => `<a class="post-card" href="${{m.u}}"><img src="${{m.i}}"><h2>${{m.t}}</h2></a>`).join(""); 
+        searchResults.innerHTML = res.map(m => `<a class="post-card" href="${{m.u}}"><img src="${{m.i}}"><h2>${{m.t}}</h2></a>`).join(""); 
     }} else {{ 
-        postList.innerHTML = "<p style='color:white; text-align:center; width:100%; margin: 50px 0;'>No movies found!</p>"; 
+        searchResults.innerHTML = "<p style='color:white; text-align:center; width:100%; grid-column: 1 / -1; margin: 50px 0;'>No movies found!</p>"; 
     }}
 }}
 if(input) input.addEventListener("input", performSearch);
@@ -222,9 +243,9 @@ def build_pages(data_list, base_slug):
         current_data = data_list[start:end]
 
         cards_html = "".join([f'<a class="post-card" href="{m["u"]}"><img src="{m["i"]}"><h2>{m["t"]}</h2></a>' for m in current_data])
-        wrapper_html = f'<div class="home-container" id="postList" style="padding:0; margin:0;">{cards_html}</div>'
+        wrapper_html = f'<div class="home-container" style="padding:0; margin:0;">{cards_html}</div>'
 
-        pagination = '<div class="pagination">'
+        pagination = '<div class="pagination" id="paginationWrapper">'
         def get_link(p):
             if base_slug == "index": return "/" if p == 1 else f"/page{p}.html"
             else: return f"/{base_slug}.html" if p == 1 else f"/{base_slug}-page{p}.html"
@@ -266,7 +287,7 @@ build_pages(search_index, "index")
 for cat, items in collections.items():
     if len(items) > 0: build_pages(items, slugify(str(cat)))
 
-# 5. WRAPPING POSTS (Replaces old scripts!)
+# 5. WRAPPING POSTS
 print("3. Formatting internal Post pages with the new UI Layout...")
 for path, _, _, _ in all_files:
     with open(path, "r", encoding="utf-8", errors="ignore") as f:
@@ -274,16 +295,13 @@ for path, _, _, _ in all_files:
         
     soup = BeautifulSoup(content, "html.parser")
     
-    # 5.1 Remove old existing headers, sidebars, footers, scripts (Clean Slate)
     for tag in soup.select('.site-header, .top-bar, .sidebar, .sidebar-overlay, .site-footer, script'):
         tag.decompose()
         
-    # 5.2 REMOVE OLD BACK BUTTON ("<- Back")
     for a in soup.find_all('a'):
         if 'back' in a.get_text().lower() and len(a.get_text().strip()) < 15:
             a.decompose()
             
-    # 5.3 Extract clean core post content
     post_container = soup.find(class_='post-container')
     if post_container:
         post_content = "".join([str(c) for c in post_container.contents])
@@ -291,7 +309,6 @@ for path, _, _, _ in all_files:
         body = soup.find('body')
         post_content = "".join([str(c) for c in body.contents]) if body else str(soup)
 
-    # 5.4 Inject core post content into Master Template
     post_html = master_template.replace("<!-- MAIN_CLASS -->", "post-container")
     post_html = post_html.replace("<!-- PAGE_TITLE -->", "")
     post_html = post_html.replace("<!-- CONTENT_HTML -->", post_content)
@@ -300,4 +317,4 @@ for path, _, _, _ in all_files:
     with open(path, "w", encoding="utf-8") as f:
         f.write(post_html)
 
-print("✅ Success! Site is fully Professional. Posts are wrapped and counts are removed.")
+print("✅ Success! Site is fully Professional. Hindi removed & Search fixed inside Posts!")
