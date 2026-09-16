@@ -76,18 +76,6 @@
 <a href="/2006.html">2006</a>
 <a href="/2005.html">2005</a>
 <a href="/2001.html">2001</a>
-<a href="/1999.html">1999</a>
-<a href="/1998.html">1998</a>
-<a href="/1996.html">1996</a>
-<a href="/1988.html">1988</a>
-<a href="/1986.html">1986</a>
-<a href="/1981.html">1981</a>
-<a href="/1969.html">1969</a>
-<a href="/1957.html">1957</a>
-<a href="/1944.html">1944</a>
-<a href="/1942.html">1942</a>
-<a href="/1940.html">1940</a>
-<a href="/1919.html">1919</a>
 </div>
     </div>
 </div>
@@ -125,13 +113,14 @@
 
 <main class="post-container" style="display:block;">
     
-    
-    <!-- Yahan Search Results Dikhenge (Default Hidden) -->
     <div class="home-container" id="searchResults" style="display:none; padding:0; margin:0; width:100%;"></div>
-    
-    <!-- Yahan Original Post ya Grid Dikhega -->
     <div id="originalContent" style="width:100%;">
-        
+        <div class="home-container" id="searchResults" style="display:none; padding:0; margin:0; width:100%;"></div>
+<div id="originalContent" style="width:100%;">
+        Yahan Search Results Dikhenge (Default Hidden) 
+<div class="home-container" id="searchResults" style="display:none; padding:0; margin:0; width:100%;"></div>
+ Yahan Original Post ya Grid Dikhega 
+<div id="originalContent" style="width:100%;">
 <img loading="lazy" src="https://i.ibb.co/jPdc4VNW/temp-vega-image.webp" style="max-width:100%; height:auto; display:block; margin:0 auto;"/>
 <h1 style="text-align: left; font-family: sans-serif; padding: 15px 10px 5px 10px; margin: 0;">
 Filing for Love (Season 1) Dual Audio {Hindi-Korean} K-Drama Series 480p 720p &amp; 1080p WEB-DL
@@ -466,14 +455,14 @@ Download Filing for Love (2026) Complete Web Series
 Thank you for visit.❤️
 </span>
 </h2>
-
+</div>
+</div>
     </div>
 </main>
 
 <footer class="site-footer">© 2026 Movies Zone | All Rights Reserved</footer>
 
 <script>
-// Sidebar Control
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('sidebarOverlay');
 const openBtn = document.getElementById('openSidebar');
@@ -484,7 +473,6 @@ openBtn.addEventListener('click', openMenu);
 closeBtn.addEventListener('click', closeMenu);
 overlay.addEventListener('click', closeMenu);
 
-// Accordion Control
 const accHeaders = document.querySelectorAll('.accordion-header');
 accHeaders.forEach(header => {
     header.addEventListener('click', function() {
@@ -495,14 +483,12 @@ accHeaders.forEach(header => {
     });
 });
 
-// Advanced Search Logic for All Pages
 let movieData = [];
 async function loadSearchData() { 
     try { const res = await fetch('/search_data.json'); movieData = await res.json(); } 
     catch(e) { console.error("Error loading search data", e); }
 }
 loadSearchData();
-
 const input = document.getElementById("searchInput");
 const searchBtn = document.getElementById("searchBtn");
 const searchResults = document.getElementById("searchResults");
@@ -510,24 +496,21 @@ const originalContent = document.getElementById("originalContent");
 const paginationWrapper = document.getElementById("paginationWrapper");
 
 function performSearch() {
+    if(!originalContent) return;
     const val = input.value.toLowerCase().trim();
-    
-    // Agar search khali hai toh original content wapas dikhao
     if (val.length < 2) { 
         searchResults.style.display = "none";
         originalContent.style.display = "block";
         if (paginationWrapper) paginationWrapper.style.display = "flex";
         return; 
     }
-    
-    const searchWords = val.split(/\s+/); 
+    const searchWords = val.split(/\\s+/); 
     const res = movieData.filter(m => {
         const titleLower = m.t.toLowerCase();
         return searchWords.every(word => titleLower.includes(word));
     });
     
-    // Result milne par original content (post/page) chupao aur result grid dikhao
-    originalContent.style.display = "none";
+    originalContent.style.display="none";
     if (paginationWrapper) paginationWrapper.style.display = "none";
     searchResults.style.display = "grid";
     
@@ -540,4 +523,4 @@ function performSearch() {
 if(input) input.addEventListener("input", performSearch);
 if(searchBtn) searchBtn.addEventListener("click", performSearch);
 </script>
-</body></html>
+</html>

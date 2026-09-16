@@ -6,44 +6,70 @@ import re
 from collections import defaultdict
 
 POSTS_DIR = "Posts"
+PLUS_DIR = "18+" # Dedicated folder for 18+ content
 POSTS_PER_PAGE = 200
 
 all_files = []
 collections = defaultdict(list)
 
-# Hindi yahan se nikal diya gaya hai
 LANGUAGES = ["English", "Gujarati", "Marathi", "Punjabi", "Bengali", "Tamil", "Telugu", "Malayalam", "Bhojpuri", "French", "Spanish"]
-GENRES = ["Action", "Comedy", "Horror", "Sci-Fi", "Romance", "Thriller", "Drama", "Fantasy", "Animation", "Crime", "Adventure", "Mystery", "18+ Content"]
+GENRES = ["Action", "Comedy", "Horror", "Sci-Fi", "Romance", "Thriller", "Drama", "Fantasy", "Animation", "Crime", "Adventure", "Mystery"]
 INDUSTRIES = ["Bollywood", "Hollywood"]
 
-print("1. Scanning files and extracting data... Please wait.")
+print("1. Scanning Posts and 18+ folders... Please wait.")
 
-for root, dirs, files in os.walk(POSTS_DIR):
-    for file in files:
-        if file.endswith(".html"):
-            path = os.path.join(root, file)
-            try:
-                with open(path, "r", encoding="utf-8", errors="ignore") as f:
-                    soup = BeautifulSoup(f, "html.parser")
-                    img = soup.find("img")
-                    img_src = img["src"] if img else ""
-                    h1 = soup.find("h1")
-                    title = h1.get_text(strip=True) if h1 else os.path.basename(path).replace(".html", "").replace("-", " ").title()
+# Function to scan directory and extract data
+def scan_directory(directory, is_18plus=False):
+    if not os.path.exists(directory):
+        return
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            if file.endswith(".html"):
+                path = os.path.join(root, file)
+                try:
+                    file_stat = os.stat(path)
+                    original_atime = file_stat.st_atime
+                    original_mtime = file_stat.st_mtime
                     
-                    full_text = (title + " " + soup.get_text(separator=" ")).lower()
-                    mtime = os.path.getmtime(path)
-                    
-                    movie_data = {"t": title, "u": "/" + path.replace("\\", "/"), "i": img_src}
-                    all_files.append((path, movie_data, full_text, mtime))
-            except: continue
+                    with open(path, "r", encoding="utf-8", errors="ignore") as f:
+                        soup = BeautifulSoup(f, "html.parser")
+                        img = soup.find("img")
+                        img_src = img["src"] if img else ""
+                        h1 = soup.find("h1")
+                        title = h1.get_text(strip=True) if h1 else os.path.basename(path).replace(".html", "").replace("-", " ").title()
+                        
+                        full_text = (title + " " + soup.get_text(separator=" ")).lower()
+                        
+                        movie_data = {"t": title, "u": "/" + path.replace("\\", "/"), "i": img_src}
+                        
+                        if is_18plus:
+                            all_files.append((path, movie_data, full_text, original_mtime, original_atime, True))
+                        else:
+                            all_files.append((path, movie_data, full_text, original_mtime, original_atime, False))
+                except: continue
 
+# Scan normal Posts folder
+scan_directory(POSTS_DIR, is_18plus=False)
+# Scan 18+ folder separately
+scan_directory(PLUS_DIR, is_18plus=True)
+
+# Sort by Original Modified Time (Newest first)
 all_files.sort(key=lambda x: x[3], reverse=True)
 search_index = [x[1] for x in all_files]
 
-for path, movie_data, full_text, mtime in all_files:
-    years = re.findall(r'\b(19\d\d|20\d\d)\b', full_text)
+# Categorization Logic
+for path, movie_data, full_text, mtime, atime, is_18plus in all_files:
+    if is_18plus:
+        # 18+ folder ki movies sirf 18+ category mein jayengi
+        collections["18+ Content"].append(movie_data)
+        continue
+
+    # Valid Years (2000 se 2026 tak hi check karega)
+    years = re.findall(r'\b(20\d\d)\b', full_text)
     if years:
-        for y in set(years): collections[y].append(movie_data)
+        for y in set(years):
+            if 2000 <= int(y) <= 2026:
+                collections[y].append(movie_data)
     
     for lang in LANGUAGES:
         if lang.lower() in full_text: collections[lang].append(movie_data)
@@ -68,20 +94,16 @@ with open("search_data.json", "w", encoding="utf-8") as f:
 def slugify(text):
     return re.sub(r'[^a-z0-9]+', '-', text.lower()).strip('-')
 
-# 2. Generate UI Sidebar & Buttons
 def generate_ui():
     genre_links = [f'<a href="/{slugify(g)}.html">{g}</a>' for g in GENRES if len(collections[g]) > 0]
     lang_links = [f'<a href="/{slugify(l)}.html">{l}</a>' for l in LANGUAGES if len(collections[l]) > 0]
-    year_keys = sorted([k for k in collections.keys() if re.match(r'^(19|20)\d\d$', k)], reverse=True)
+    year_keys = sorted([k for k in collections.keys() if re.match(r'^20\d\d$', k)], reverse=True)
     year_links = [f'<a href="/{slugify(y)}.html">{y}</a>' for y in year_keys]
 
     sidebar_html = ""
-    if genre_links:
-        sidebar_html += f'\n<div class="accordion-header"><span>Category / Genre</span><span class="icon">+</span></div>\n<div class="accordion-body">\n' + '\n'.join(genre_links) + '\n</div>'
-    if lang_links:
-        sidebar_html += f'\n<div class="accordion-header"><span>Language</span><span class="icon">+</span></div>\n<div class="accordion-body">\n' + '\n'.join(lang_links) + '\n</div>'
-    if year_links:
-        sidebar_html += f'\n<div class="accordion-header"><span>Year</span><span class="icon">+</span></div>\n<div class="accordion-body">\n' + '\n'.join(year_links) + '\n</div>'
+    if genre_links: sidebar_html += f'\n<div class="accordion-header"><span>Category / Genre</span><span class="icon">+</span></div>\n<div class="accordion-body">\n' + '\n'.join(genre_links) + '\n</div>'
+    if lang_links: sidebar_html += f'\n<div class="accordion-header"><span>Language</span><span class="icon">+</span></div>\n<div class="accordion-body">\n' + '\n'.join(lang_links) + '\n</div>'
+    if year_links: sidebar_html += f'\n<div class="accordion-header"><span>Year</span><span class="icon">+</span></div>\n<div class="accordion-body">\n' + '\n'.join(year_links) + '\n</div>'
 
     quick_cats = ["18+ Content", "Bollywood", "Hollywood", "South Hindi Dubbed", "Web Series", "Gujarati", "Marathi", "Bengali", "Punjabi"]
     
@@ -99,8 +121,7 @@ def generate_ui():
 
 sidebar_html, buttons_html = generate_ui()
 
-# 3. Master HTML Template (Search Fix applied for Post Pages)
-master_template = f"""<!DOCTYPE html>
+master_template = fr"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <script src="https://bleatbehind.com/77/19/55/7719558a2ddf75875325865ff105e8f4.js"></script>
@@ -149,11 +170,7 @@ master_template = f"""<!DOCTYPE html>
 
 <main class="<!-- MAIN_CLASS -->" style="display:block;">
     <!-- PAGE_TITLE -->
-    
-    <!-- Yahan Search Results Dikhenge (Default Hidden) -->
     <div class="home-container" id="searchResults" style="display:none; padding:0; margin:0; width:100%;"></div>
-    
-    <!-- Yahan Original Post ya Grid Dikhega -->
     <div id="originalContent" style="width:100%;">
         <!-- CONTENT_HTML -->
     </div>
@@ -162,7 +179,6 @@ master_template = f"""<!DOCTYPE html>
 <footer class="site-footer">© 2026 Movies Zone | All Rights Reserved</footer>
 
 <script>
-// Sidebar Control
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('sidebarOverlay');
 const openBtn = document.getElementById('openSidebar');
@@ -173,7 +189,6 @@ openBtn.addEventListener('click', openMenu);
 closeBtn.addEventListener('click', closeMenu);
 overlay.addEventListener('click', closeMenu);
 
-// Accordion Control
 const accHeaders = document.querySelectorAll('.accordion-header');
 accHeaders.forEach(header => {{
     header.addEventListener('click', function() {{
@@ -184,14 +199,12 @@ accHeaders.forEach(header => {{
     }});
 }});
 
-// Advanced Search Logic for All Pages
 let movieData = [];
 async function loadSearchData() {{ 
     try {{ const res = await fetch('/search_data.json'); movieData = await res.json(); }} 
     catch(e) {{ console.error("Error loading search data", e); }}
 }}
 loadSearchData();
-
 const input = document.getElementById("searchInput");
 const searchBtn = document.getElementById("searchBtn");
 const searchResults = document.getElementById("searchResults");
@@ -199,24 +212,21 @@ const originalContent = document.getElementById("originalContent");
 const paginationWrapper = document.getElementById("paginationWrapper");
 
 function performSearch() {{
+    if(!originalContent) return;
     const val = input.value.toLowerCase().trim();
-    
-    // Agar search khali hai toh original content wapas dikhao
     if (val.length < 2) {{ 
         searchResults.style.display = "none";
         originalContent.style.display = "block";
         if (paginationWrapper) paginationWrapper.style.display = "flex";
         return; 
     }}
-    
-    const searchWords = val.split(/\s+/); 
+    const searchWords = val.split(/\\s+/); 
     const res = movieData.filter(m => {{
         const titleLower = m.t.toLowerCase();
         return searchWords.every(word => titleLower.includes(word));
     }});
     
-    // Result milne par original content (post/page) chupao aur result grid dikhao
-    originalContent.style.display = "none";
+    originalContent.style.display="none";
     if (paginationWrapper) paginationWrapper.style.display = "none";
     searchResults.style.display = "grid";
     
@@ -229,13 +239,11 @@ function performSearch() {{
 if(input) input.addEventListener("input", performSearch);
 if(searchBtn) searchBtn.addEventListener("click", performSearch);
 </script>
-</body></html>"""
+</html>"""
 
-# 4. Generate Home & Category Pages
-def build_pages(data_list, base_slug):
+# 4. Generate Home Index Pages (Fast Pagination for Home Page)
+def build_home_pages(data_list):
     total_pages = math.ceil(len(data_list) / POSTS_PER_PAGE)
-    if total_pages == 0: return
-    
     for page in range(total_pages):
         current_page = page + 1
         start = page * POSTS_PER_PAGE
@@ -246,56 +254,60 @@ def build_pages(data_list, base_slug):
         wrapper_html = f'<div class="home-container" style="padding:0; margin:0;">{cards_html}</div>'
 
         pagination = '<div class="pagination" id="paginationWrapper">'
-        def get_link(p):
-            if base_slug == "index": return "/" if p == 1 else f"/page{p}.html"
-            else: return f"/{base_slug}.html" if p == 1 else f"/{base_slug}-page{p}.html"
-
         if total_pages > 1:
-            if current_page > 1: pagination += f'<a href="{get_link(current_page-1)}" class="page-btn">← Previous</a>'
-            visible_pages = []
-            if total_pages <= 5: visible_pages = range(1, total_pages + 1)
-            else:
-                if current_page <= 3: visible_pages = [1, 2, 3, 4, "...", total_pages]
-                elif current_page >= total_pages - 2: visible_pages = [1, "...", total_pages - 3, total_pages - 2, total_pages - 1, total_pages]
-                else: visible_pages = [1, "...", current_page - 1, current_page, current_page + 1, "...", total_pages]
+            if current_page > 1:
+                prev_link = "/" if current_page == 2 else f"/page{current_page-1}.html"
+                pagination += f'<a href="{prev_link}" class="page-btn">← Previous</a>'
+            
+            for i in range(1, total_pages + 1):
+                active_class = "active" if i == current_page else ""
+                link = "/" if i == 1 else f"/page{i}.html"
+                pagination += f'<a href="{link}" class="page-num {active_class}">{i}</a>'
 
-            for i in visible_pages:
-                if i == "...": pagination += '<span class="dots">...</span>'
-                else:
-                    active_class = "active" if i == current_page else ""
-                    pagination += f'<a href="{get_link(i)}" class="page-num {active_class}">{i}</a>'
-
-            if current_page < total_pages: pagination += f'<a href="{get_link(current_page+1)}" class="page-btn">Next →</a>'
+            if current_page < total_pages:
+                pagination += f'<a href="/page{current_page+1}.html" class="page-btn">Next →</a>'
         pagination += "</div>"
 
-        page_title_html = ""
-        if base_slug != "index":
-            display_title = base_slug.replace("-", " ").title()
-            page_title_html = f'<h2 style="text-align:center; color:#00ffd5; margin: 15px 0 20px; text-transform: uppercase; letter-spacing: 2px;">Category: {display_title}</h2>'
-
         final_html = master_template.replace("<!-- MAIN_CLASS -->", "home-container")
-        final_html = final_html.replace("<!-- PAGE_TITLE -->", page_title_html)
+        final_html = final_html.replace("<!-- PAGE_TITLE -->", "")
         final_html = final_html.replace("<!-- CONTENT_HTML -->", wrapper_html)
         final_html = final_html.replace("<!-- PAGINATION -->", pagination)
 
-        filename = get_link(current_page).lstrip("/")
-        if filename == "": filename = "index.html"
+        filename = "index.html" if current_page == 1 else f"page{current_page}.html"
         with open(filename, "w", encoding="utf-8") as f: f.write(final_html)
 
-print("2. Generating Home and Category Index Pages...")
-build_pages(search_index, "index")
-for cat, items in collections.items():
-    if len(items) > 0: build_pages(items, slugify(str(cat)))
+print("2. Generating Home Index Pages...")
+build_home_pages(search_index)
 
-# 5. WRAPPING POSTS
-print("3. Formatting internal Post pages with the new UI Layout...")
-for path, _, _, _ in all_files:
+# 5. Generate Single Category Pages
+def build_single_category_page(data_list, cat_name):
+    cards_html = "".join([f'<a class="post-card" href="{m["u"]}"><img src="{m["i"]}"><h2>{m["t"]}</h2></a>' for m in data_list])
+    wrapper_html = f'<div class="home-container" style="padding:0; margin:0;">{cards_html}</div>'
+
+    page_title_html = f'<h2 style="text-align:center; color:#00ffd5; margin: 15px 0 20px; text-transform: uppercase; letter-spacing: 2px;">Category: {cat_name}</h2>'
+
+    final_html = master_template.replace("<!-- MAIN_CLASS -->", "home-container")
+    final_html = final_html.replace("<!-- PAGE_TITLE -->", page_title_html)
+    final_html = final_html.replace("<!-- CONTENT_HTML -->", wrapper_html)
+    final_html = final_html.replace("<!-- PAGINATION -->", "")
+
+    filename = f"{slugify(cat_name)}.html"
+    with open(filename, "w", encoding="utf-8") as f: f.write(final_html)
+
+print("3. Generating Single Category Pages...")
+for cat, items in collections.items():
+    if len(items) > 0:
+        build_single_category_page(items, str(cat))
+
+# 6. Formatting Posts & Preserving Original Times
+print("4. Formatting Post pages... (Preserving original exact time!)")
+for path, _, _, original_mtime, original_atime, _ in all_files:
     with open(path, "r", encoding="utf-8", errors="ignore") as f:
         content = f.read()
         
     soup = BeautifulSoup(content, "html.parser")
     
-    for tag in soup.select('.site-header, .top-bar, .sidebar, .sidebar-overlay, .site-footer, script'):
+    for tag in soup.select('.site-header, .top-bar, .sidebar, .sidebar-overlay, .site-footer, script, .back-btn'):
         tag.decompose()
         
     for a in soup.find_all('a'):
@@ -311,10 +323,12 @@ for path, _, _, _ in all_files:
 
     post_html = master_template.replace("<!-- MAIN_CLASS -->", "post-container")
     post_html = post_html.replace("<!-- PAGE_TITLE -->", "")
-    post_html = post_html.replace("<!-- CONTENT_HTML -->", post_content)
+    post_html = post_html.replace("<!-- CONTENT_HTML -->", post_content.strip())
     post_html = post_html.replace("<!-- PAGINATION -->", "")
     
     with open(path, "w", encoding="utf-8") as f:
         f.write(post_html)
+        
+    os.utime(path, (original_atime, original_mtime))
 
-print("✅ Success! Site is fully Professional. Hindi removed & Search fixed inside Posts!")
+print("✅ Success! 18+ folder isolated, valid years fixed, pagination secured, and timeline intact!")
