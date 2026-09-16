@@ -18,7 +18,6 @@ INDUSTRIES = ["Bollywood", "Hollywood"]
 
 print("1. Scanning Posts and 18+ folders... Please wait.")
 
-# Function to scan directory and extract data
 def scan_directory(directory, is_18plus=False):
     if not os.path.exists(directory):
         return
@@ -48,23 +47,21 @@ def scan_directory(directory, is_18plus=False):
                             all_files.append((path, movie_data, full_text, original_mtime, original_atime, False))
                 except: continue
 
-# Scan normal Posts folder
+# Scan normal Posts folder and 18+ folder
 scan_directory(POSTS_DIR, is_18plus=False)
-# Scan 18+ folder separately
 scan_directory(PLUS_DIR, is_18plus=True)
 
 # Sort by Original Modified Time (Newest first)
 all_files.sort(key=lambda x: x[3], reverse=True)
-search_index = [x[1] for x in all_files]
 
-# Categorization Logic
+# 🔥 FIX: Search index aur Home page ke liye sirf non-18+ movies hi rahengi!
+search_index = [x[1] for x in all_files if x[5] == False]
+
 for path, movie_data, full_text, mtime, atime, is_18plus in all_files:
     if is_18plus:
-        # 18+ folder ki movies sirf 18+ category mein jayengi
         collections["18+ Content"].append(movie_data)
         continue
 
-    # Valid Years (2000 se 2026 tak hi check karega)
     years = re.findall(r'\b(20\d\d)\b', full_text)
     if years:
         for y in set(years):
@@ -241,7 +238,6 @@ if(searchBtn) searchBtn.addEventListener("click", performSearch);
 </script>
 </html>"""
 
-# 4. Generate Home Index Pages (Fast Pagination for Home Page)
 def build_home_pages(data_list):
     total_pages = math.ceil(len(data_list) / POSTS_PER_PAGE)
     for page in range(total_pages):
@@ -279,7 +275,6 @@ def build_home_pages(data_list):
 print("2. Generating Home Index Pages...")
 build_home_pages(search_index)
 
-# 5. Generate Single Category Pages
 def build_single_category_page(data_list, cat_name):
     cards_html = "".join([f'<a class="post-card" href="{m["u"]}"><img src="{m["i"]}"><h2>{m["t"]}</h2></a>' for m in data_list])
     wrapper_html = f'<div class="home-container" style="padding:0; margin:0;">{cards_html}</div>'
@@ -299,7 +294,6 @@ for cat, items in collections.items():
     if len(items) > 0:
         build_single_category_page(items, str(cat))
 
-# 6. Formatting Posts & Preserving Original Times
 print("4. Formatting Post pages... (Preserving original exact time!)")
 for path, _, _, original_mtime, original_atime, _ in all_files:
     with open(path, "r", encoding="utf-8", errors="ignore") as f:
@@ -331,4 +325,4 @@ for path, _, _, original_mtime, original_atime, _ in all_files:
         
     os.utime(path, (original_atime, original_mtime))
 
-print("✅ Success! 18+ folder isolated, valid years fixed, pagination secured, and timeline intact!")
+print("✅ Success! 18+ folder content is now completely hidden from Home page and Live Search!")
