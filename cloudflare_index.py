@@ -6,7 +6,7 @@ import re
 from collections import defaultdict
 
 POSTS_DIR = "Posts"
-PLUS_DIR = "18+" # Dedicated folder for 18+ content
+PLUS_DIR = "18+" # Dedicated folder for strictly 18+ exclusive content
 POSTS_PER_PAGE = 200
 
 all_files = []
@@ -18,7 +18,7 @@ INDUSTRIES = ["Bollywood", "Hollywood"]
 
 print("1. Scanning Posts and 18+ folders... Please wait.")
 
-def scan_directory(directory, is_18plus=False):
+def scan_directory(directory, is_exclusive_18plus=False):
     if not os.path.exists(directory):
         return
     for root, dirs, files in os.walk(directory):
@@ -41,26 +41,28 @@ def scan_directory(directory, is_18plus=False):
                         
                         movie_data = {"t": title, "u": "/" + path.replace("\\", "/"), "i": img_src}
                         
-                        if is_18plus:
-                            all_files.append((path, movie_data, full_text, original_mtime, original_atime, True))
-                        else:
-                            all_files.append((path, movie_data, full_text, original_mtime, original_atime, False))
+                        all_files.append((path, movie_data, full_text, original_mtime, original_atime, is_exclusive_18plus))
                 except: continue
 
-# Scan normal Posts folder and 18+ folder
-scan_directory(POSTS_DIR, is_18plus=False)
-scan_directory(PLUS_DIR, is_18plus=True)
+# Scan normal Posts folder and 18+ exclusive folder
+scan_directory(POSTS_DIR, is_exclusive_18plus=False)
+scan_directory(PLUS_DIR, is_exclusive_18plus=True)
 
 # Sort by Original Modified Time (Newest first)
 all_files.sort(key=lambda x: x[3], reverse=True)
 
-# 🔥 FIX: Search index aur Home page ke liye sirf non-18+ movies hi rahengi!
+# 🔥 FIX: Search index aur Home page mein sirf wahi aayengi jo exclusive 18+ folder mein nahi hain
 search_index = [x[1] for x in all_files if x[5] == False]
 
-for path, movie_data, full_text, mtime, atime, is_18plus in all_files:
-    if is_18plus:
+for path, movie_data, full_text, mtime, atime, is_exclusive_18plus in all_files:
+    if is_exclusive_18plus:
+        # Exclusive 18+ folder ki files sirf 18+ category mein jayengi
         collections["18+ Content"].append(movie_data)
         continue
+
+    # Normal Posts folder ki files (Check if it has 18+ in text/title to add in 18+ category too)
+    if "18+" in full_text or "[18+]" in full_text:
+        collections["18+ Content"].append(movie_data)
 
     years = re.findall(r'\b(20\d\d)\b', full_text)
     if years:
@@ -118,6 +120,7 @@ def generate_ui():
 
 sidebar_html, buttons_html = generate_ui()
 
+# MASTER TEMPLATE (Completely cleaned from debug text)
 master_template = fr"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -325,4 +328,4 @@ for path, _, _, original_mtime, original_atime, _ in all_files:
         
     os.utime(path, (original_atime, original_mtime))
 
-print("✅ Success! 18+ folder content is now completely hidden from Home page and Live Search!")
+print("✅ Success! Posts folder 18+ posts will now show on Home AND 18+ category. Debug text removed!")
