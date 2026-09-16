@@ -11,14 +11,14 @@ POSTS_PER_PAGE = 200
 all_files = []
 collections = defaultdict(list)
 
-# Predefined keywords jo script aapki files me dhundhegi
-LANGUAGES = ["Hindi", "English", "Gujarati", "Marathi", "Punjabi", "Bengali", "Tamil", "Telugu", "Malayalam", "Bhojpuri", "French", "Spanish", "Dual Audio"]
+# "Dual Audio" ko LANGUAGES list se nikal diya gaya hai
+LANGUAGES = ["Hindi", "English", "Gujarati", "Marathi", "Punjabi", "Bengali", "Tamil", "Telugu", "Malayalam", "Bhojpuri", "French", "Spanish"]
 GENRES = ["Action", "Comedy", "Horror", "Sci-Fi", "Romance", "Thriller", "Drama", "Fantasy", "Animation", "Crime", "Adventure", "Mystery", "18+ Content"]
 INDUSTRIES = ["Bollywood", "Hollywood"]
 
 print("Scanning files and extracting categories... Please wait.")
 
-# 1. Scan and Extract Data (Sirf ek baar open hoga sab kuch)
+# 1. Scan and Extract Data
 for root, dirs, files in os.walk(POSTS_DIR):
     for file in files:
         if file.endswith(".html"):
@@ -31,7 +31,6 @@ for root, dirs, files in os.walk(POSTS_DIR):
                     h1 = soup.find("h1")
                     title = h1.get_text(strip=True) if h1 else os.path.basename(path).replace(".html", "").replace("-", " ").title()
                     
-                    # Pura text check karne ke liye jisse category extract hogi
                     full_text = (title + " " + soup.get_text(separator=" ")).lower()
                     mtime = os.path.getmtime(path)
                     
@@ -45,46 +44,38 @@ search_index = [x[1] for x in all_files]
 
 # 3. Populate Categories automatically
 for path, movie_data, full_text, mtime in all_files:
-    # Year Find Karna
     years = re.findall(r'\b(19\d\d|20\d\d)\b', full_text)
     if years:
         for y in set(years): collections[y].append(movie_data)
     
-    # Language Find Karna
     for lang in LANGUAGES:
         if lang.lower() in full_text: collections[lang].append(movie_data)
             
-    # Genre Find Karna
     for genre in GENRES:
         if genre.lower() in full_text: collections[genre].append(movie_data)
             
-    # Web Series Find karna (Season, S01, etc.)
     if bool(re.search(r'\b(s\d\d?|season|episode|web series)\b', full_text)):
         collections["Web Series"].append(movie_data)
     else:
         collections["Movies"].append(movie_data)
         
-    # Specific Category (Bollywood, Hollywood, South)
     for ind in INDUSTRIES:
         if ind.lower() in full_text: collections[ind].append(movie_data)
     
     if "south" in full_text and ("hindi" in full_text or "dubbed" in full_text):
         collections["South Hindi Dubbed"].append(movie_data)
 
-# Save Live Search JSON
 with open("search_data.json", "w", encoding="utf-8") as f:
     json.dump(search_index, f)
 
-# Name ko URL link banata hai (Gujarati -> gujarati)
 def slugify(text):
     return re.sub(r'[^a-z0-9]+', '-', text.lower()).strip('-')
 
-# 4. Generate Dynamic UI (Wahi buttons/links banenge jinme kam se kam 1 movie ho)
+# 4. Generate Dynamic UI
 def generate_ui():
     genre_links = [f'<a href="{slugify(g)}.html">{g} ({len(collections[g])})</a>' for g in GENRES if len(collections[g]) > 0]
     lang_links = [f'<a href="{slugify(l)}.html">{l} ({len(collections[l])})</a>' for l in LANGUAGES if len(collections[l]) > 0]
     
-    # Years ko naye se purane me arrange karna
     year_keys = sorted([k for k in collections.keys() if re.match(r'^(19|20)\d\d$', k)], reverse=True)
     year_links = [f'<a href="{slugify(y)}.html">{y} ({len(collections[y])})</a>' for y in year_keys]
 
@@ -104,7 +95,6 @@ def generate_ui():
             Join Telegram
         </a>"""
     
-    # Loop for Category Links (Ab <button> ki jagah <a> tags hain jisse category khule)
     for cat in quick_cats:
         if len(collections[cat]) > 0:
             buttons_html += f'\n        <a href="{slugify(cat)}.html" class="cat-btn">{cat}</a>'
@@ -150,11 +140,11 @@ def build_pages(data_list, base_slug):
             if current_page < total_pages: pagination += f'<a href="{get_link(current_page+1)}" class="page-btn">Next →</a>'
         pagination += "</div>"
 
-        # Agar home page nahi hai, toh title dikhao
+        # Changed Title Display Logic
         page_title_html = ""
         if base_slug != "index":
             display_title = base_slug.replace("-", " ").title()
-            page_title_html = f'<h2 style="text-align:center; color:#00ffd5; margin: 15px 0 20px; text-transform: uppercase; letter-spacing: 2px;">{display_title} Movies</h2>'
+            page_title_html = f'<h2 style="text-align:center; color:#00ffd5; margin: 15px 0 20px; text-transform: uppercase; letter-spacing: 2px;">Category: {display_title}</h2>'
 
         html = fr"""<!DOCTYPE html>
 <html lang="en">
@@ -213,19 +203,16 @@ def build_pages(data_list, base_slug):
 <footer class="site-footer">© 2026 Movies Zone | All Rights Reserved</footer>
 
 <script>
-// Sidebar Logic
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('sidebarOverlay');
 const openBtn = document.getElementById('openSidebar');
 const closeBtn = document.getElementById('closeSidebar');
-
 function openMenu() {{ sidebar.classList.add('active'); overlay.classList.add('active'); }}
 function closeMenu() {{ sidebar.classList.remove('active'); overlay.classList.remove('active'); }}
 openBtn.addEventListener('click', openMenu);
 closeBtn.addEventListener('click', closeMenu);
 overlay.addEventListener('click', closeMenu);
 
-// Accordion Logic
 const accHeaders = document.querySelectorAll('.accordion-header');
 accHeaders.forEach(header => {{
     header.addEventListener('click', function() {{
@@ -236,7 +223,6 @@ accHeaders.forEach(header => {{
     }});
 }});
 
-// Live Search Logic
 let movieData = [];
 async function loadSearchData() {{ 
     try {{ const res = await fetch('search_data.json'); movieData = await res.json(); }} 
@@ -273,15 +259,12 @@ searchBtn.addEventListener("click", performSearch);
         with open(filename, "w", encoding="utf-8") as f:
             f.write(html)
 
-# ================== EXECUTE ==================
-# 1. Main Home Pages Generate Karega
 print(f"Generating main index pages... (Total Movies: {len(search_index)})")
 build_pages(search_index, "index")
 
-# 2. Saari Categories (Gujarati, Action, 2026 etc.) Generate Karega
 for cat, items in collections.items():
     if len(items) > 0:
         print(f"Generating page for: {cat} ({len(items)} items)...")
         build_pages(items, slugify(str(cat)))
 
-print("✅ UI fixed, Smart categorization, and all Pages generated completely!")
+print("✅ Underlines removed, Dual Audio removed, and Category titles updated!")
