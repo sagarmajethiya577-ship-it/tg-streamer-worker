@@ -6,7 +6,6 @@ import re
 from collections import defaultdict
 
 POSTS_DIR = "Posts"
-PLUS_DIR = "18+" # Dedicated folder for strictly 18+ exclusive content
 POSTS_PER_PAGE = 200
 
 all_files = []
@@ -16,12 +15,10 @@ LANGUAGES = ["English", "Gujarati", "Marathi", "Punjabi", "Bengali", "Tamil", "T
 GENRES = ["Action", "Comedy", "Horror", "Sci-Fi", "Romance", "Thriller", "Drama", "Fantasy", "Animation", "Crime", "Adventure", "Mystery"]
 INDUSTRIES = ["Bollywood", "Hollywood"]
 
-print("1. Scanning Posts and 18+ folders... Please wait.")
+print("1. Scanning Posts folder... Please wait.")
 
-def scan_directory(directory, is_exclusive_18plus=False):
-    if not os.path.exists(directory):
-        return
-    for root, dirs, files in os.walk(directory):
+if os.path.exists(POSTS_DIR):
+    for root, dirs, files in os.walk(POSTS_DIR):
         for file in files:
             if file.endswith(".html"):
                 path = os.path.join(root, file)
@@ -37,31 +34,26 @@ def scan_directory(directory, is_exclusive_18plus=False):
                         h1 = soup.find("h1")
                         title = h1.get_text(strip=True) if h1 else os.path.basename(path).replace(".html", "").replace("-", " ").title()
                         
+                        # CLEANING STEP: Agar purani file mein wo debug text ghus gaya hai, to use yhin saaf kar do
+                        for t in soup.find_all(text=True):
+                            if "Yahan Search Results Dikhenge" in t:
+                                t.extract()
+
+                        # Pura text check karne ke liye, lekin 18+ ke liye strict check rakhenge
                         full_text = (title + " " + soup.get_text(separator=" ")).lower()
                         
                         movie_data = {"t": title, "u": "/" + path.replace("\\", "/"), "i": img_src}
-                        
-                        all_files.append((path, movie_data, full_text, original_mtime, original_atime, is_exclusive_18plus))
+                        all_files.append((path, movie_data, full_text, original_mtime, original_atime, title, soup))
                 except: continue
-
-# Scan normal Posts folder and 18+ exclusive folder
-scan_directory(POSTS_DIR, is_exclusive_18plus=False)
-scan_directory(PLUS_DIR, is_exclusive_18plus=True)
 
 # Sort by Original Modified Time (Newest first)
 all_files.sort(key=lambda x: x[3], reverse=True)
 
-# 🔥 FIX: Search index aur Home page mein sirf wahi aayengi jo exclusive 18+ folder mein nahi hain
-search_index = [x[1] for x in all_files if x[5] == False]
+search_index = [x[1] for x in all_files]
 
-for path, movie_data, full_text, mtime, atime, is_exclusive_18plus in all_files:
-    if is_exclusive_18plus:
-        # Exclusive 18+ folder ki files sirf 18+ category mein jayengi
-        collections["18+ Content"].append(movie_data)
-        continue
-
-    # Normal Posts folder ki files (Check if it has 18+ in text/title to add in 18+ category too)
-    if "18+" in full_text or "[18+]" in full_text:
+for path, movie_data, full_text, mtime, atime, title, soup in all_files:
+    # STRICT 18+ CHECK: Sirf tabhi 18+ maana jayega jab Title ya pure text mein exact "18+" ya "[18+]" ho (resolution ke numbers se match nahi hoga)
+    if "18+" in title.lower() or "[18+]" in title.lower() or re.search(r'\b18\+\b', full_text):
         collections["18+ Content"].append(movie_data)
 
     years = re.findall(r'\b(20\d\d)\b', full_text)
@@ -74,7 +66,8 @@ for path, movie_data, full_text, mtime, atime, is_exclusive_18plus in all_files:
         if lang.lower() in full_text: collections[lang].append(movie_data)
             
     for genre in GENRES:
-        if genre.lower() in full_text: collections[genre].append(movie_data)
+        if genre.lower() in full_text and genre != "18+ Content": 
+            collections[genre].append(movie_data)
             
     if bool(re.search(r'\b(s\d\d?|season|episode|web series)\b', full_text)):
         collections["Web Series"].append(movie_data)
@@ -120,7 +113,7 @@ def generate_ui():
 
 sidebar_html, buttons_html = generate_ui()
 
-# MASTER TEMPLATE (Completely cleaned from debug text)
+# Absolute Clean Master Template
 master_template = fr"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -269,6 +262,7 @@ def build_home_pages(data_list):
 
         final_html = master_template.replace("<!-- MAIN_CLASS -->", "home-container")
         final_html = final_html.replace("<!-- PAGE_TITLE -->", "")
+        final_html.replace("<!-- PAGE_TITLE -->", "")
         final_html = final_html.replace("<!-- CONTENT_HTML -->", wrapper_html)
         final_html = final_html.replace("<!-- PAGINATION -->", pagination)
 
@@ -297,12 +291,8 @@ for cat, items in collections.items():
     if len(items) > 0:
         build_single_category_page(items, str(cat))
 
-print("4. Formatting Post pages... (Preserving original exact time!)")
-for path, _, _, original_mtime, original_atime, _ in all_files:
-    with open(path, "r", encoding="utf-8", errors="ignore") as f:
-        content = f.read()
-        
-    soup = BeautifulSoup(content, "html.parser")
+print("4. Formatting Post pages and cleaning debug text... (Preserving original exact time!)")
+for path, _, _, original_mtime, original_atime, title, soup in all_files:
     
     for tag in soup.select('.site-header, .top-bar, .sidebar, .sidebar-overlay, .site-footer, script, .back-btn'):
         tag.decompose()
@@ -328,4 +318,4 @@ for path, _, _, original_mtime, original_atime, _ in all_files:
         
     os.utime(path, (original_atime, original_mtime))
 
-print("✅ Success! Posts folder 18+ posts will now show on Home AND 18+ category. Debug text removed!")
+print("✅ Success! Strict 18+ filter applied (Title/Exact match only) and all post pages cleaned completely!")
