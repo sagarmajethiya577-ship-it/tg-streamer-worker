@@ -12,38 +12,42 @@ body {
   line-height: 1.7;
 }
 
-/* ================= TOP BAR & MENU BUTTON ================= */
+/* ================= TOP BAR & PREMIUM MENU BUTTON ================= */
 .top-bar {
   display: flex;
   justify-content: flex-start;
   padding: 15px 15px 0 15px;
-  background: #180828;
+  background: #12051f;
 }
 
 .menu-btn {
-  background: transparent;
-  border: 1px solid #00ffd5;
-  color: #00ffd5;
-  padding: 8px 15px;
-  border-radius: 6px;
+  background: linear-gradient(45deg, #e21265, #ff007f);
+  border: none;
+  color: #ffffff;
+  padding: 8px 18px;
+  border-radius: 25px;
   font-weight: 700;
   cursor: pointer;
   font-family: 'Montserrat', sans-serif;
-  font-size: 14px;
+  font-size: 13px;
+  letter-spacing: 1px;
   transition: all 0.3s ease;
   display: inline-flex;
   align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 10px rgba(226, 18, 101, 0.3);
 }
 
 .menu-btn:hover {
-  background: rgba(0, 255, 213, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(226, 18, 101, 0.5);
 }
 
-/* ================= SIDEBAR ================= */
+/* ================= CLEAN SIDEBAR UI ================= */
 .sidebar-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.85);
   z-index: 999;
   opacity: 0;
   visibility: hidden;
@@ -61,12 +65,12 @@ body {
   left: -320px;
   width: 280px;
   height: 100vh;
-  background: linear-gradient(180deg, #180828 0%, #090214 100%);
+  background: #0a0212; /* Clean dark background */
   z-index: 1000;
   transition: left 0.3s ease;
-  border-right: 2px solid #281442;
+  border-right: 1px solid #281442;
   overflow-y: auto;
-  box-shadow: 5px 0 20px rgba(0,0,0,0.9);
+  box-shadow: 5px 0 25px rgba(0,0,0,0.9);
 }
 
 .sidebar.active {
@@ -76,60 +80,61 @@ body {
 .close-btn {
   background: none;
   border: none;
-  color: #e21265;
+  color: #a594c4;
   font-size: 35px;
   position: absolute;
   right: 15px;
-  top: 5px;
+  top: 10px;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .close-btn:hover {
-  transform: scale(1.1);
+  color: #ff007f;
+  transform: rotate(90deg);
 }
 
 .sidebar-content {
-  padding: 60px 20px 30px;
+  padding: 70px 25px 30px;
 }
 
 .menu-section {
-  margin-bottom: 25px;
-  background: rgba(30, 18, 51, 0.4);
-  padding: 15px;
-  border-radius: 8px;
-  border: 1px solid rgba(68, 48, 105, 0.5);
+  margin-bottom: 35px;
 }
 
 .menu-section h3 {
-  color: #00ffd5;
-  font-size: 15px;
+  color: #ffffff;
+  font-size: 14px;
   text-transform: uppercase;
-  margin-bottom: 12px;
-  border-bottom: 1px dashed #443069;
+  margin-bottom: 15px;
   padding-bottom: 8px;
+  border-bottom: 2px solid #e21265;
   font-family: 'Oswald', sans-serif;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
+  display: inline-block;
 }
 
 .menu-section a {
   display: block;
-  color: #c9bdeb;
+  color: #a594c4;
   text-decoration: none;
   font-size: 14px;
-  padding: 8px 0;
-  transition: color 0.2s, padding-left 0.2s;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+  font-weight: 500;
 }
 
 .menu-section a:hover {
-  color: #ffffff;
-  padding-left: 8px;
-  font-weight: bold;
+  color: #00ffd5;
+  padding-left: 10px;
+  border-left: 3px solid #00ffd5;
+  background: linear-gradient(90deg, rgba(0,255,213,0.1) 0%, transparent 100%);
 }
 
-/* ================= PREMIUM HEADER & SEARCH ================= */
+/* ================= HEADER & SEARCH ================= */
 .site-header {
-  background: linear-gradient(180deg, #180828 0%, #090214 100%);
+  background: linear-gradient(180deg, #12051f 0%, #090214 100%);
   padding: 10px 15px 25px 15px;
   border-bottom: 2px solid #281442;
   text-align: center;
@@ -200,12 +205,13 @@ body {
 
 #searchBtn:hover { background: #c20f54; }
 
-/* ================= WRAPPED CATEGORY BUTTONS ================= */
+/* ================= WRAPPED CATEGORY & TELEGRAM BUTTONS ================= */
 .category-container {
   width: 100%;
   display: flex;
-  flex-wrap: wrap;       /* Allows buttons to flow to next line */
-  justify-content: center; /* Center aligns the buttons */
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
   gap: 12px;
   padding-top: 5px;
 }
@@ -229,6 +235,38 @@ body {
   color: #fff;
   border-color: #e21265;
   transform: translateY(-2px);
+}
+
+/* Telegram Button Specific UI */
+.tg-btn {
+  background: linear-gradient(45deg, #2AABEE, #229ED9);
+  color: #ffffff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Montserrat', sans-serif;
+  box-shadow: 0 4px 10px rgba(42, 171, 238, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+}
+
+.tg-btn:hover {
+  background: linear-gradient(45deg, #229ED9, #1c88ba);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(42, 171, 238, 0.5);
+  color: #ffffff;
+}
+
+.tg-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
 }
 
 /* ================= HOME PAGE & OTHERS ================= */
@@ -267,7 +305,7 @@ body {
 
 @media (max-width: 400px) {
   .site-title { font-size: 34px; }
-  .cat-btn { padding: 6px 14px; font-size: 12px; }
+  .cat-btn, .tg-btn { padding: 6px 14px; font-size: 12px; }
   #searchInput { padding: 12px 15px; font-size: 13px; }
   #searchBtn { padding: 0 15px; font-size: 12px; }
 }
