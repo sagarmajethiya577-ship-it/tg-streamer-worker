@@ -45,12 +45,10 @@ for page in range(total_pages):
     # --- Smart Pagination Logic ---
     pagination = '<div class="pagination">'
     
-    # Previous Button
     if current_page > 1:
         prev_link = "index.html" if current_page == 2 else f"page{current_page-1}.html"
         pagination += f'<a href="{prev_link}" class="page-btn">← Previous</a>'
 
-    # Logic to show limited numbers
     visible_pages = []
     if total_pages <= 5:
         visible_pages = range(1, total_pages + 1)
@@ -70,13 +68,12 @@ for page in range(total_pages):
             link = "index.html" if i == 1 else f"page{i}.html"
             pagination += f'<a href="{link}" class="page-num {active_class}">{i}</a>'
 
-    # Next Button
     if current_page < total_pages:
         pagination += f'<a href="page{current_page+1}.html" class="page-btn">Next →</a>'
     
     pagination += "</div>"
 
-    # HTML Template (Added Nav Menu & Categories)
+    # HTML Template (Added Sidebar and New Quick Buttons)
     html = fr"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -104,18 +101,62 @@ for page in range(total_pages):
 </head>
 <body>
 
-<!-- NEW: Navigation Menu -->
-<nav class="nav-menu">
-    <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="#">Movies</a></li>
-        <li><a href="#">Web Series</a></li>
-        <li><a href="#">Request</a></li>
-        <li><a href="#">DMCA</a></li>
-    </ul>
-</nav>
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- Sidebar Menu -->
+<div class="sidebar" id="sidebar">
+    <button class="close-btn" id="closeSidebar">&times;</button>
+    <div class="sidebar-content">
+        
+        <div class="menu-section">
+            <h3>Movies</h3>
+            <a href="#">All Languages Movies</a>
+            <a href="#">Bollywood Movies</a>
+            <a href="#">Hollywood Movies</a>
+            <a href="#">South Movies</a>
+        </div>
+
+        <div class="menu-section">
+            <h3>Web Series</h3>
+            <a href="#">All Languages Web Series</a>
+            <a href="#">Hindi Web Series</a>
+            <a href="#">English Web Series</a>
+        </div>
+
+        <div class="menu-section">
+            <h3>Category / Genre</h3>
+            <a href="#">Action</a>
+            <a href="#">Comedy</a>
+            <a href="#">Horror</a>
+            <a href="#">Sci-Fi</a>
+            <a href="#">Romance</a>
+            <a href="#">Thriller</a>
+        </div>
+
+        <div class="menu-section">
+            <h3>Language</h3>
+            <a href="#">Hindi</a>
+            <a href="#">English</a>
+            <a href="#">Gujarati</a>
+            <a href="#">Marathi</a>
+        </div>
+
+        <div class="menu-section">
+            <h3>Year</h3>
+            <a href="#">2026</a>
+            <a href="#">2025</a>
+            <a href="#">2024</a>
+            <a href="#">2023</a>
+        </div>
+
+    </div>
+</div>
 
 <header class="site-header">
+    <div class="top-bar">
+        <button class="menu-btn" id="openSidebar">☰ MENU</button>
+    </div>
     <div class="header-content">
         <a href="/" class="site-title">Movies Zone</a>
         <div class="search-wrapper">
@@ -123,14 +164,15 @@ for page in range(total_pages):
             <button id="searchBtn">SEARCH</button>
         </div>
         
-        <!-- NEW: Category Buttons under search -->
+        <!-- NEW: Quick Category Buttons -->
         <div class="category-container">
-            <button class="cat-btn">Action</button>
-            <button class="cat-btn">Comedy</button>
-            <button class="cat-btn">Horror</button>
-            <button class="cat-btn">Sci-Fi</button>
-            <button class="cat-btn">Romance</button>
-            <button class="cat-btn">Thriller</button>
+            <button class="cat-btn">18+ Content</button>
+            <button class="cat-btn">Bollywood</button>
+            <button class="cat-btn">Hollywood</button>
+            <button class="cat-btn">South Hindi Dubbed</button>
+            <button class="cat-btn">Web Series</button>
+            <button class="cat-btn">Gujarati</button>
+            <button class="cat-btn">Marathi</button>
         </div>
         
     </div>
@@ -141,6 +183,27 @@ for page in range(total_pages):
 <footer class="site-footer">© 2026 Movies Zone | All Rights Reserved</footer>
 
 <script>
+// Sidebar Logic
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+const openBtn = document.getElementById('openSidebar');
+const closeBtn = document.getElementById('closeSidebar');
+
+function openMenu() {{
+    sidebar.classList.add('active');
+    overlay.classList.add('active');
+}}
+
+function closeMenu() {{
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+}}
+
+openBtn.addEventListener('click', openMenu);
+closeBtn.addEventListener('click', closeMenu);
+overlay.addEventListener('click', closeMenu);
+
+// Search Logic
 let movieData = [];
 async function loadSearchData() {{ 
     try {{
@@ -184,4 +247,4 @@ searchBtn.addEventListener("click", performSearch);
     filename = "index.html" if page == 0 else f"page{page+1}.html"
     with open(filename, "w", encoding="utf-8") as f: f.write(html)
 
-print("✅ Design updated with Menu Bar and Category Buttons!")
+print("✅ Index codes regenerated. Sidebar Menu and New Buttons added perfectly!")
