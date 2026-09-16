@@ -42,9 +42,7 @@ for page in range(total_pages):
         if movie_data:
             cards_html += f'<a class="post-card" href="{movie_data["u"]}"><img src="{movie_data["i"]}"><h2>{movie_data["t"]}</h2></a>'
 
-    # --- Smart Pagination Logic ---
     pagination = '<div class="pagination">'
-    
     if current_page > 1:
         prev_link = "index.html" if current_page == 2 else f"page{current_page-1}.html"
         pagination += f'<a href="{prev_link}" class="page-btn">← Previous</a>'
@@ -70,10 +68,8 @@ for page in range(total_pages):
 
     if current_page < total_pages:
         pagination += f'<a href="page{current_page+1}.html" class="page-btn">Next →</a>'
-    
     pagination += "</div>"
 
-    # HTML Template (Added Sidebar and New Quick Buttons)
     html = fr"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -101,27 +97,25 @@ for page in range(total_pages):
 </head>
 <body>
 
-<!-- Sidebar Overlay -->
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-<!-- Sidebar Menu -->
 <div class="sidebar" id="sidebar">
     <button class="close-btn" id="closeSidebar">&times;</button>
     <div class="sidebar-content">
         
         <div class="menu-section">
-            <h3>Movies</h3>
-            <a href="#">All Languages Movies</a>
-            <a href="#">Bollywood Movies</a>
-            <a href="#">Hollywood Movies</a>
-            <a href="#">South Movies</a>
+            <h3>Type</h3>
+            <a href="#">Movies</a>
+            <a href="#">Web Series</a>
         </div>
 
         <div class="menu-section">
-            <h3>Web Series</h3>
-            <a href="#">All Languages Web Series</a>
-            <a href="#">Hindi Web Series</a>
-            <a href="#">English Web Series</a>
+            <h3>Industry</h3>
+            <a href="#">Bollywood</a>
+            <a href="#">Hollywood</a>
+            <a href="#">South Indian</a>
+            <a href="#">Gujarati</a>
+            <a href="#">Marathi</a>
         </div>
 
         <div class="menu-section">
@@ -132,6 +126,7 @@ for page in range(total_pages):
             <a href="#">Sci-Fi</a>
             <a href="#">Romance</a>
             <a href="#">Thriller</a>
+            <a href="#">18+ Content</a>
         </div>
 
         <div class="menu-section">
@@ -153,10 +148,11 @@ for page in range(total_pages):
     </div>
 </div>
 
+<div class="top-bar">
+    <button class="menu-btn" id="openSidebar">☰ MENU</button>
+</div>
+
 <header class="site-header">
-    <div class="top-bar">
-        <button class="menu-btn" id="openSidebar">☰ MENU</button>
-    </div>
     <div class="header-content">
         <a href="/" class="site-title">Movies Zone</a>
         <div class="search-wrapper">
@@ -164,7 +160,6 @@ for page in range(total_pages):
             <button id="searchBtn">SEARCH</button>
         </div>
         
-        <!-- NEW: Quick Category Buttons -->
         <div class="category-container">
             <button class="cat-btn">18+ Content</button>
             <button class="cat-btn">Bollywood</button>
@@ -183,33 +178,22 @@ for page in range(total_pages):
 <footer class="site-footer">© 2026 Movies Zone | All Rights Reserved</footer>
 
 <script>
-// Sidebar Logic
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('sidebarOverlay');
 const openBtn = document.getElementById('openSidebar');
 const closeBtn = document.getElementById('closeSidebar');
 
-function openMenu() {{
-    sidebar.classList.add('active');
-    overlay.classList.add('active');
-}}
-
-function closeMenu() {{
-    sidebar.classList.remove('active');
-    overlay.classList.remove('active');
-}}
+function openMenu() {{ sidebar.classList.add('active'); overlay.classList.add('active'); }}
+function closeMenu() {{ sidebar.classList.remove('active'); overlay.classList.remove('active'); }}
 
 openBtn.addEventListener('click', openMenu);
 closeBtn.addEventListener('click', closeMenu);
 overlay.addEventListener('click', closeMenu);
 
-// Search Logic
 let movieData = [];
 async function loadSearchData() {{ 
-    try {{
-        const res = await fetch('search_data.json'); 
-        movieData = await res.json(); 
-    }} catch(e) {{ console.error("Error loading search data", e); }}
+    try {{ const res = await fetch('search_data.json'); movieData = await res.json(); }} 
+    catch(e) {{ console.error("Error loading search data", e); }}
 }}
 loadSearchData();
 
@@ -220,11 +204,7 @@ const originalContent = postList.innerHTML;
 
 function performSearch() {{
     const val = input.value.toLowerCase().trim();
-    
-    if (val.length < 2) {{ 
-        postList.innerHTML = originalContent; 
-        return; 
-    }}
+    if (val.length < 2) {{ postList.innerHTML = originalContent; return; }}
     
     const searchWords = val.split(/\s+/); 
     const res = movieData.filter(m => {{
@@ -238,7 +218,6 @@ function performSearch() {{
         postList.innerHTML = "<p style='color:white; text-align:center; width:100%; margin: 50px 0;'>No movies found!</p>"; 
     }}
 }}
-
 input.addEventListener("input", performSearch);
 searchBtn.addEventListener("click", performSearch);
 </script>
@@ -247,4 +226,4 @@ searchBtn.addEventListener("click", performSearch);
     filename = "index.html" if page == 0 else f"page{page+1}.html"
     with open(filename, "w", encoding="utf-8") as f: f.write(html)
 
-print("✅ Index codes regenerated. Sidebar Menu and New Buttons added perfectly!")
+print("✅ UI fixed! Wrapped buttons and refined Sidebar applied.")

@@ -12,10 +12,12 @@ body {
   line-height: 1.7;
 }
 
-/* ================= SIDEBAR & MENU BUTTON ================= */
+/* ================= TOP BAR & MENU BUTTON ================= */
 .top-bar {
-  text-align: left;
-  margin-bottom: 5px;
+  display: flex;
+  justify-content: flex-start;
+  padding: 15px 15px 0 15px;
+  background: #180828;
 }
 
 .menu-btn {
@@ -31,13 +33,13 @@ body {
   transition: all 0.3s ease;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
 }
 
 .menu-btn:hover {
   background: rgba(0, 255, 213, 0.1);
 }
 
+/* ================= SIDEBAR ================= */
 .sidebar-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -93,6 +95,10 @@ body {
 
 .menu-section {
   margin-bottom: 25px;
+  background: rgba(30, 18, 51, 0.4);
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid rgba(68, 48, 105, 0.5);
 }
 
 .menu-section h3 {
@@ -100,7 +106,7 @@ body {
   font-size: 15px;
   text-transform: uppercase;
   margin-bottom: 12px;
-  border-bottom: 1px solid #281442;
+  border-bottom: 1px dashed #443069;
   padding-bottom: 8px;
   font-family: 'Oswald', sans-serif;
   letter-spacing: 1px;
@@ -108,7 +114,7 @@ body {
 
 .menu-section a {
   display: block;
-  color: #a594c4;
+  color: #c9bdeb;
   text-decoration: none;
   font-size: 14px;
   padding: 8px 0;
@@ -117,13 +123,14 @@ body {
 
 .menu-section a:hover {
   color: #ffffff;
-  padding-left: 5px;
+  padding-left: 8px;
+  font-weight: bold;
 }
 
 /* ================= PREMIUM HEADER & SEARCH ================= */
 .site-header {
   background: linear-gradient(180deg, #180828 0%, #090214 100%);
-  padding: 15px 15px 25px 15px;
+  padding: 10px 15px 25px 15px;
   border-bottom: 2px solid #281442;
   text-align: center;
 }
@@ -134,13 +141,13 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
 }
 
 .site-title {
   text-decoration: none;
   font-family: 'Oswald', sans-serif;
-  font-size: 38px;
+  font-size: 42px;
   font-weight: 900;
   letter-spacing: 1.5px;
   color: #ffffff;
@@ -153,11 +160,6 @@ body {
   line-height: 1.1;
   font-style: italic;
   padding-right: 8px;
-  font-display: swap;
-}
-
-.site-title:hover {
-  opacity: 0.9;
 }
 
 .search-wrapper {
@@ -168,7 +170,6 @@ body {
   overflow: hidden;
   border: 1px solid #443069;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
-  margin-top: 5px;
 }
 
 #searchInput {
@@ -182,9 +183,7 @@ body {
   font-family: 'Montserrat', sans-serif;
 }
 
-#searchInput::placeholder {
-  color: #a594c4;
-}
+#searchInput::placeholder { color: #a594c4; }
 
 #searchBtn {
   background: #e21265;
@@ -199,52 +198,40 @@ body {
   transition: background 0.2s ease;
 }
 
-#searchBtn:hover {
-  background: #c20f54;
-}
+#searchBtn:hover { background: #c20f54; }
 
-/* ================= CATEGORY BUTTONS (BELOW SEARCH) ================= */
+/* ================= WRAPPED CATEGORY BUTTONS ================= */
 .category-container {
   width: 100%;
   display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding: 5px 0 10px 0;
-  scrollbar-width: none; /* Firefox */
-}
-
-.category-container::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
+  flex-wrap: wrap;       /* Allows buttons to flow to next line */
+  justify-content: center; /* Center aligns the buttons */
+  gap: 12px;
+  padding-top: 5px;
 }
 
 .cat-btn {
-  background: #1e1233;
-  color: #fff;
-  border: 1px solid #443069;
-  padding: 8px 16px;
+  background: #150a24;
+  color: #d1c5ea;
+  border: 1px solid #3d2563;
+  padding: 8px 18px;
   border-radius: 20px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
-  white-space: nowrap;
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Montserrat', sans-serif;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
 
 .cat-btn:hover {
   background: #e21265;
   color: #fff;
   border-color: #e21265;
+  transform: translateY(-2px);
 }
 
-/* Responsive */
-@media (max-width: 400px) {
-  .site-title { font-size: 30px; }
-  #searchInput { padding: 12px 15px; font-size: 13px; }
-  #searchBtn { padding: 0 15px; font-size: 12px; }
-}
-
-/* ================= HOME PAGE ================= */
+/* ================= HOME PAGE & OTHERS ================= */
 .home-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -263,61 +250,27 @@ body {
   box-shadow: 0 4px 12px rgba(0,0,0,.5);
   transition: transform .2s ease;
 }
+.post-card:hover { transform: translateY(-4px); }
+.post-card img { width: 100%; display: block; }
+.post-card h2 { font-size: 14px; padding: 10px; margin: 0; font-weight: 700; }
 
-.post-card:hover {
-  transform: translateY(-4px);
-}
+.pagination { text-align: center; margin: 25px 0; }
+.pagination a, .pagination span { display: inline-block; margin: 4px; padding: 6px 10px; font-size: 14px; text-decoration: none; border-radius: 6px; }
+.pagination a { border: 1px solid #00ffd5; color: #00ffd5; }
+.pagination a:hover { background: #00ffd5; color: #000; }
+.pagination .active { background: #00ffd5; color: #000; font-weight: bold; }
 
-.post-card img {
-  width: 100%;
-  display: block;
-}
-
-.post-card h2 {
-  font-size: 14px;
-  padding: 10px;
-  margin: 0;
-  font-weight: 700;
-}
-
-/* ================= PAGINATION ================= */
-.pagination {
-  text-align: center;
-  margin: 25px 0;
-}
-
-.pagination a,
-.pagination span {
-  display: inline-block;
-  margin: 4px;
-  padding: 6px 10px;
-  font-size: 14px;
-  text-decoration: none;
-  border-radius: 6px;
-}
-
-.pagination a {
-  border: 1px solid #00ffd5;
-  color: #00ffd5;
-}
-
-.pagination a:hover {
-  background: #00ffd5;
-  color: #000;
-}
-
-.pagination .active {
-  background: #00ffd5;
-  color: #000;
-  font-weight: bold;
-}
-
-/* ================= POST PAGE & FOOTER ================= */
 .post-container { max-width: 800px; margin: auto; padding: 15px; }
 .post-container img { max-width: 100%; height: auto; display: block; margin: 15px auto; border-radius: 8px; }
 .post-container h1 { display: none; }
 .site-footer { text-align: center; padding: 15px; font-size: 13px; color: #aaa; border-top: 1px solid #222; margin-top: 20px; }
 
+@media (max-width: 400px) {
+  .site-title { font-size: 34px; }
+  .cat-btn { padding: 6px 14px; font-size: 12px; }
+  #searchInput { padding: 12px 15px; font-size: 13px; }
+  #searchBtn { padding: 0 15px; font-size: 12px; }
+}
 @media (max-width: 600px) {
   .home-container { grid-template-columns: repeat(2, 1fr); }
 }
