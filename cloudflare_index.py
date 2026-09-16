@@ -6,6 +6,7 @@ import re
 from collections import defaultdict
 
 POSTS_DIR = "Posts"
+PLUS_DIR = "18+" # Aapka alag se banaya hua 18+ folder
 POSTS_PER_PAGE = 200
 
 all_files = []
@@ -15,10 +16,12 @@ LANGUAGES = ["English", "Gujarati", "Marathi", "Punjabi", "Bengali", "Tamil", "T
 GENRES = ["Action", "Comedy", "Horror", "Sci-Fi", "Romance", "Thriller", "Drama", "Fantasy", "Animation", "Crime", "Adventure", "Mystery"]
 INDUSTRIES = ["Bollywood", "Hollywood"]
 
-print("1. Scanning Posts folder... Please wait.")
+print("1. Scanning Posts and 18+ folders... Please wait.")
 
-if os.path.exists(POSTS_DIR):
-    for root, dirs, files in os.walk(POSTS_DIR):
+def scan_directory(directory, is_18plus_folder=False):
+    if not os.path.exists(directory):
+        return
+    for root, dirs, files in os.walk(directory):
         for file in files:
             if file.endswith(".html"):
                 path = os.path.join(root, file)
@@ -28,34 +31,42 @@ if os.path.exists(POSTS_DIR):
                     original_mtime = file_stat.st_mtime
                     
                     with open(path, "r", encoding="utf-8", errors="ignore") as f:
-                        soup = BeautifulSoup(f, "html.parser")
+                        # Sirf title aur thoda data nikalenge taaki script fast chale
+                        content = f.read()
+                        soup = BeautifulSoup(content, "html.parser")
                         img = soup.find("img")
                         img_src = img["src"] if img else ""
                         h1 = soup.find("h1")
                         title = h1.get_text(strip=True) if h1 else os.path.basename(path).replace(".html", "").replace("-", " ").title()
                         
-                        # CLEANING STEP: Agar purani file mein wo debug text ghus gaya hai, to use yhin saaf kar do
-                        for t in soup.find_all(text=True):
-                            if "Yahan Search Results Dikhenge" in t:
-                                t.extract()
-
-                        # Pura text check karne ke liye, lekin 18+ ke liye strict check rakhenge
                         full_text = (title + " " + soup.get_text(separator=" ")).lower()
                         
                         movie_data = {"t": title, "u": "/" + path.replace("\\", "/"), "i": img_src}
-                        all_files.append((path, movie_data, full_text, original_mtime, original_atime, title, soup))
+                        all_files.append((path, movie_data, full_text, original_mtime, original_atime, title, is_18plus_folder))
                 except: continue
+
+# Scan dono folders ko karenge
+scan_directory(POSTS_DIR, is_18plus_folder=False)
+scan_directory(PLUS_DIR, is_18plus_folder=True)
 
 # Sort by Original Modified Time (Newest first)
 all_files.sort(key=lambda x: x[3], reverse=True)
 
-search_index = [x[1] for x in all_files]
+# 🔥 SEARCH & HOME PAGE: Sirf Posts folder wali files aayengi (is_18plus_folder == False)
+search_index = [x[1] for x in all_files if x[6] == False]
 
-for path, movie_data, full_text, mtime, atime, title, soup in all_files:
-    # STRICT 18+ CHECK: Sirf tabhi 18+ maana jayega jab Title ya pure text mein exact "18+" ya "[18+]" ho (resolution ke numbers se match nahi hoga)
-    if "18+" in title.lower() or "[18+]" in title.lower() or re.search(r'\b18\+\b', full_text):
+for path, movie_data, full_text, mtime, atime, title, is_18plus_folder in all_files:
+    title_lower = title.lower()
+    
+    # 18+ CHECK: Agar wo 18+ folder se aayi hai, YA fir title mein [18+] likha hai
+    if is_18plus_folder or "18+" in title_lower or "18 +" in title_lower or "[18+]" in title_lower:
         collections["18+ Content"].append(movie_data)
+        
+    # Agar ye file sirf 18+ folder ki hai, toh isko baaki kisi category mein nahi dalna hai!
+    if is_18plus_folder:
+        continue
 
+    # NORMAL CATEGORIES (Sirf Posts folder wali files ke liye)
     years = re.findall(r'\b(20\d\d)\b', full_text)
     if years:
         for y in set(years):
@@ -113,7 +124,6 @@ def generate_ui():
 
 sidebar_html, buttons_html = generate_ui()
 
-# Absolute Clean Master Template
 master_template = fr"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -262,7 +272,6 @@ def build_home_pages(data_list):
 
         final_html = master_template.replace("<!-- MAIN_CLASS -->", "home-container")
         final_html = final_html.replace("<!-- PAGE_TITLE -->", "")
-        final_html.replace("<!-- PAGE_TITLE -->", "")
         final_html = final_html.replace("<!-- CONTENT_HTML -->", wrapper_html)
         final_html = final_html.replace("<!-- PAGINATION -->", pagination)
 
@@ -292,8 +301,24 @@ for cat, items in collections.items():
         build_single_category_page(items, str(cat))
 
 print("4. Formatting Post pages and cleaning debug text... (Preserving original exact time!)")
-for path, _, _, original_mtime, original_atime, title, soup in all_files:
+for path, _, _, original_mtime, original_atime, title, _ in all_files:
+    with open(path, "r", encoding="utf-8", errors="ignore") as f:
+        content = f.read()
+
+    # 🔥 NUCLEAR CLEANING: File padhte hi sabse pehle wo ganda text mita denge
+    bad_phrases = [
+        "Yahan Search Results Dikhenge (Default Hidden)",
+        "Yahan Original Post ya Grid Dikhega",
+        "Yahan Search Results Dikhenge",
+        "Yahan Original Post"
+    ]
+    for bad in bad_phrases:
+        content = content.replace(bad, "")
+        content = content.replace(f"<!-- {bad} -->", "")
+
+    soup = BeautifulSoup(content, "html.parser")
     
+    # Baaki bacha kachra (purana header footer) saaf karenge
     for tag in soup.select('.site-header, .top-bar, .sidebar, .sidebar-overlay, .site-footer, script, .back-btn'):
         tag.decompose()
         
@@ -308,6 +333,7 @@ for path, _, _, original_mtime, original_atime, title, soup in all_files:
         body = soup.find('body')
         post_content = "".join([str(c) for c in body.contents]) if body else str(soup)
 
+    # Naya chamakta hua layout apply karenge
     post_html = master_template.replace("<!-- MAIN_CLASS -->", "post-container")
     post_html = post_html.replace("<!-- PAGE_TITLE -->", "")
     post_html = post_html.replace("<!-- CONTENT_HTML -->", post_content.strip())
@@ -318,4 +344,4 @@ for path, _, _, original_mtime, original_atime, title, soup in all_files:
         
     os.utime(path, (original_atime, original_mtime))
 
-print("✅ Success! Strict 18+ filter applied (Title/Exact match only) and all post pages cleaned completely!")
+print("✅ Success! 18+ dual logic is working perfectly, and all post pages are 100% clean!")
