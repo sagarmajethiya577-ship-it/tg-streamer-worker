@@ -9,7 +9,7 @@ POSTS_PER_PAGE = 200
 all_files = []
 search_index = []
 
-# 1. Scan and Index
+# Scan and Index
 for root, dirs, files in os.walk(POSTS_DIR):
     for file in files:
         if file.endswith(".html"):
@@ -74,7 +74,6 @@ for page in range(total_pages):
 <html lang="en">
 <head>
 <script src="https://bleatbehind.com/77/19/55/7719558a2ddf75875325865ff105e8f4.js"></script>
-
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-XRNB9X1DJ2"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -103,8 +102,12 @@ for page in range(total_pages):
     <button class="close-btn" id="closeSidebar">&times;</button>
     <div class="sidebar-content">
         
-        <div class="menu-section">
-            <h3>Category / Genre</h3>
+        <!-- Accordion Item 1 -->
+        <div class="accordion-header">
+            <span>Category / Genre</span>
+            <span class="icon">+</span>
+        </div>
+        <div class="accordion-body">
             <a href="#">Action</a>
             <a href="#">Comedy</a>
             <a href="#">Horror</a>
@@ -114,8 +117,12 @@ for page in range(total_pages):
             <a href="#">18+ Content</a>
         </div>
 
-        <div class="menu-section">
-            <h3>Year</h3>
+        <!-- Accordion Item 2 -->
+        <div class="accordion-header">
+            <span>Year</span>
+            <span class="icon">+</span>
+        </div>
+        <div class="accordion-body">
             <a href="#">2026</a>
             <a href="#">2025</a>
             <a href="#">2024</a>
@@ -127,11 +134,10 @@ for page in range(total_pages):
 
 <div class="top-bar">
     <button class="menu-btn" id="openSidebar">
-        <!-- SVG Hamburger Icon -->
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+        <!-- SVG Hamburger Icon Only -->
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
             <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
         </svg>
-        MENU
     </button>
 </div>
 
@@ -144,22 +150,23 @@ for page in range(total_pages):
         </div>
         
         <div class="category-container">
-            <button class="cat-btn">18+ Content</button>
-            
-            <!-- NEW TELEGRAM BUTTON (Link is here) -->
+            <!-- Telegram button placed BEFORE 18+ Content -->
             <a href="https://t.me/moviesrequest044" target="_blank" class="tg-btn">
                 <svg viewBox="0 0 24 24">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.19-.08-.05-.19-.02-.27 0-.12.03-1.96 1.25-5.54 3.67-.52.36-.99.53-1.41.52-.46-.01-1.35-.26-2.01-.48-.81-.27-1.46-.42-1.4-.88.03-.24.36-.48.98-.74 3.84-1.67 6.4-2.77 7.68-3.3 3.63-1.5 4.38-1.76 4.87-1.77.11 0 .35.03.48.14.11.09.14.22.15.31.02.13.01.24 0 .34z"/>
                 </svg>
                 Join Telegram
             </a>
-
+            
+            <button class="cat-btn">18+ Content</button>
             <button class="cat-btn">Bollywood</button>
             <button class="cat-btn">Hollywood</button>
             <button class="cat-btn">South Hindi Dubbed</button>
             <button class="cat-btn">Web Series</button>
             <button class="cat-btn">Gujarati</button>
             <button class="cat-btn">Marathi</button>
+            <button class="cat-btn">Bengali</button>
+            <button class="cat-btn">Punjabi</button>
         </div>
         
     </div>
@@ -170,6 +177,7 @@ for page in range(total_pages):
 <footer class="site-footer">© 2026 Movies Zone | All Rights Reserved</footer>
 
 <script>
+// Sidebar Logic
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('sidebarOverlay');
 const openBtn = document.getElementById('openSidebar');
@@ -182,6 +190,21 @@ openBtn.addEventListener('click', openMenu);
 closeBtn.addEventListener('click', closeMenu);
 overlay.addEventListener('click', closeMenu);
 
+// Accordion Logic for Sidebar
+const accHeaders = document.querySelectorAll('.accordion-header');
+accHeaders.forEach(header => {{
+    header.addEventListener('click', function() {{
+        this.classList.toggle('active');
+        const body = this.nextElementSibling;
+        if (body.style.maxHeight) {{
+            body.style.maxHeight = null;
+        }} else {{
+            body.style.maxHeight = body.scrollHeight + "px";
+        }}
+    }});
+}});
+
+// Search Logic
 let movieData = [];
 async function loadSearchData() {{ 
     try {{ const res = await fetch('search_data.json'); movieData = await res.json(); }} 
@@ -218,4 +241,4 @@ searchBtn.addEventListener("click", performSearch);
     filename = "index.html" if page == 0 else f"page{page+1}.html"
     with open(filename, "w", encoding="utf-8") as f: f.write(html)
 
-print("✅ UI fixed! Clean Menu, sleek Sidebar, and solid Telegram button applied.")
+print("✅ Accordion Sidebar, Icon Menu, and random styled buttons applied.")
